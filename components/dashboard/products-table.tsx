@@ -182,22 +182,11 @@ export function ProductsTable({ products, onRefresh }: ProductsTableProps) {
     <div className="space-y-6">
       <Card>
         <CardContent>
-          <div className="flex flex-col mt-6 gap-4 mb-6">
+          <div className="flex flex-col mt-2 gap-4 mb-6">
             {/* Header with refresh button */}
             <div className="flex justify-between items-center">
-              <div>
-                <h2 className="text-xl font-semibold">Products Inventory</h2>
-                <p className="text-sm text-gray-600">Total: {products.length} products</p>
-              </div>
-              <Button
-                onClick={handleRefresh}
-                disabled={refreshing}
-                variant="outline"
-                size="sm"
-              >
-                <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
-                Refresh
-              </Button>
+              
+             
             </div>
             
             {/* First row - Search and Category */}
@@ -224,6 +213,16 @@ export function ProductsTable({ products, onRefresh }: ProductsTableProps) {
                   ))}
                 </SelectContent>
               </Select>
+
+               <Button
+                onClick={handleRefresh}
+                disabled={refreshing}
+                variant="outline"
+                size="sm"
+              >
+                <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
             </div>
             
             {/* Second row - Stock, Price Range, and Sort */}

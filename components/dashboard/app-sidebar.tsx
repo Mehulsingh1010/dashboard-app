@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import Image from "next/image"
 
 interface AppSidebarProps {
   activeTab: string
@@ -46,15 +47,18 @@ export function AppSidebar({ activeTab, setActiveTab, userEmail, onLogout, notif
   }
 
   return (
-    <Sidebar variant="floating" className="border-r-0 bg-white/95 backdrop-blur-sm shadow-lg rounded-xl m-4">
-      <SidebarHeader className="p-6 pb-4">
+    <Sidebar 
+      variant="floating" 
+      className="border-r-0 bg-white/95 backdrop-blur-sm shadow-lg rounded-xl m-4 h-[calc(100vh-2rem)] flex flex-col"
+    >
+      <SidebarHeader className="p-6 pb-4 flex-shrink-0">
         {/* Logo and Brand */}
         <div className="flex items-center gap-3 mb-8">
-          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-blue-700 shadow">
-            <Building2 className="h-5 w-5 text-white" />
+          <div className="flex h-10 w-10 items-center justify-center ">
+            <Image src="/logo.png" alt="stocker" height={50} width={50}/>
           </div>
           <div>
-            <h2 className="text-lg font-semibold text-gray-900 tracking-tight">DMS</h2>
+            <h2 className="text-lg font-semibold text-gray-900 tracking-tight">Stocker</h2>
             <p className="text-xs text-gray-500 font-medium">Inventory System</p>
           </div>
         </div>
@@ -71,7 +75,8 @@ export function AppSidebar({ activeTab, setActiveTab, userEmail, onLogout, notif
           </div>
         </div>
       </SidebarHeader>
-      <SidebarContent className="px-4">
+      
+      <SidebarContent className="px-4 flex-1 overflow-y-auto">
         {/* Quick Action Button */}
         <div className="mb-4 px-2">
           <Button
@@ -95,12 +100,12 @@ export function AppSidebar({ activeTab, setActiveTab, userEmail, onLogout, notif
                   onClick={() => setActiveTab(item.id)}
                   isActive={activeTab === item.id}
                   className={cn(
-                    "w-full justify-start px-3 py-2.5 rounded-lg relative", // Changed justify-between to justify-start
+                    "w-full justify-start px-3 py-2.5 rounded-lg relative",
                     "text-gray-600 hover:bg-gray-100 hover:text-gray-900",
                     "data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600",
                     "data-[active=true]:font-medium transition-colors duration-200",
                     activeTab === item.id &&
-                      "before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-2/3 before:w-1 before:bg-blue-600 before:rounded-r-full", // Blue active indicator
+                      "before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-2/3 before:w-1 before:bg-blue-600 before:rounded-r-full",
                   )}
                 >
                   <div
@@ -118,7 +123,8 @@ export function AppSidebar({ activeTab, setActiveTab, userEmail, onLogout, notif
           })}
         </SidebarMenu>
       </SidebarContent>
-      <SidebarFooter className="p-4 pt-2">
+      
+      <SidebarFooter className="p-4 pt-2 flex-shrink-0">
         <SidebarSeparator className="my-4 bg-gray-200" />
         {/* Footer Actions */}
         <div className="flex items-center justify-between mb-4">
@@ -153,8 +159,8 @@ export function AppSidebar({ activeTab, setActiveTab, userEmail, onLogout, notif
         </div>
         {/* Copyright */}
         <div className="text-center">
-          <p className="text-xs text-gray-400 mb-1">© {new Date().getFullYear()} DMS System</p>
-          <p className="text-xs text-gray-400">v1.0.0</p>
+          <p className="text-xs text-gray-400 mb-1">© {new Date().getFullYear()} Inventory System</p>
+        
         </div>
       </SidebarFooter>
     </Sidebar>

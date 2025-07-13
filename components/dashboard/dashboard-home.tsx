@@ -95,10 +95,10 @@ export function DashboardHome({ onNavigate }: DashboardHomeProps) {
 
 
   const recentOrders = [
-    { id: 'ORD-001', customer: 'John Doe', amount: '$250.00', status: 'Completed' },
-    { id: 'ORD-002', customer: 'Jane Smith', amount: '$180.00', status: 'Pending' },
-    { id: 'ORD-003', customer: 'Mike Johnson', amount: '$320.00', status: 'Processing' },
-    { id: 'ORD-004', customer: 'Sarah Wilson', amount: '$95.00', status: 'Completed' },
+    { id: 'ORD-001', customer: 'Mehul', amount: '$250.00', status: 'Completed' },
+    { id: 'ORD-002', customer: 'Dipesh', amount: '$180.00', status: 'Pending' },
+    { id: 'ORD-003', customer: 'Lokesh', amount: '$320.00', status: 'Processing' },
+    { id: 'ORD-004', customer: 'Messi', amount: '$95.00', status: 'Completed' },
   ]
 
   if (loading) {
@@ -113,7 +113,7 @@ export function DashboardHome({ onNavigate }: DashboardHomeProps) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen rounded-lg bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
     
 

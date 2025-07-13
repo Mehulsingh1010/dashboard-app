@@ -184,7 +184,7 @@ export default function DashboardPage() {
               </Button>
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gray-200 text-gray-700 text-sm font-medium overflow-hidden">
                 <Image
-                  src="/placeholder-user.png"
+                  src="/user.png"
                   alt="User Avatar"
                   width={36}
                   height={36}
@@ -195,7 +195,7 @@ export default function DashboardPage() {
           </header>
           
           {/* Main Content */}
-          <main className="flex-1 p-4 overflow-auto">
+          <main className="flex-1 p-2 overflow-auto">
             {activeTab === "dashboard" && (
               <DashboardHome 
                 onNavigate={handleNavigate} 

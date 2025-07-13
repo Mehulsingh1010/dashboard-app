@@ -1,474 +1,438 @@
-import { Html, Head, Body, Container, Section, Text, Heading, Button, Hr } from "@react-email/components"
+import { Html, Head, Body, Container, Section, Text, Heading, Button, Hr, Img } from "@react-email/components"
 
 interface WelcomeEmailProps {
   email: string
 }
 
+const main = {
+  backgroundColor: "#0f0f23", // Deep dark background
+  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
+  margin: "0",
+  padding: "40px 20px",
+  lineHeight: "1.6",
+}
+
+const container = {
+  backgroundColor: "#1a1a2e", // Dark container
+  margin: "0 auto",
+  maxWidth: "650px",
+  borderRadius: "24px",
+  overflow: "hidden",
+  boxShadow: "0 32px 64px -12px rgba(139, 92, 246, 0.3), 0 0 0 1px rgba(139, 92, 246, 0.1)",
+  border: "1px solid rgba(139, 92, 246, 0.2)",
+}
+
+const headerSection = {
+  background: "linear-gradient(135deg, #8b5cf6 0%, #06b6d4 50%, #10b981 100%)",
+  padding: "60px 40px",
+  textAlign: "center" as const,
+  position: "relative" as const,
+}
+
+const logoContainer = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  marginBottom: "24px",
+}
+
+const logoImg = {
+  width: "48px",
+  height: "48px",
+  borderRadius: "16px",
+  backgroundColor: "rgba(255, 255, 255, 0.1)",
+  padding: "8px",
+  marginRight: "12px",
+  backdropFilter: "blur(10px)",
+}
+
+const appName = {
+  color: "#ffffff",
+  fontSize: "42px",
+  fontWeight: "800",
+  margin: "0",
+  textShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+  letterSpacing: "-0.02em",
+}
+
+const tagline = {
+  color: "rgba(255, 255, 255, 0.9)",
+  fontSize: "18px",
+  margin: "0",
+  fontWeight: "500",
+  textShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+}
+
+const content = {
+  padding: "0",
+}
+
+const welcomeSection = {
+  padding: "60px 40px 40px",
+  textAlign: "center" as const,
+  background: "linear-gradient(180deg, #1a1a2e 0%, #16213e 100%)",
+}
+
+const heading = {
+  fontSize: "48px",
+  fontWeight: "900",
+  background: "linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  margin: "0 0 24px 0",
+  textAlign: "center" as const,
+  letterSpacing: "-0.02em",
+}
+
+const subheading = {
+  fontSize: "20px",
+  color: "#a1a1aa",
+  margin: "0 0 40px 0",
+  fontWeight: "400",
+  lineHeight: "1.5",
+}
+
+const successBadge = {
+  background: "linear-gradient(135deg, #10b981 0%, #059669 100%)",
+  borderRadius: "50px",
+  padding: "20px 40px",
+  textAlign: "center" as const,
+  margin: "0 auto 60px",
+  maxWidth: "400px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  boxShadow: "0 20px 40px rgba(16, 185, 129, 0.3)",
+}
+
+const successIcon = {
+  fontSize: "28px",
+  margin: "0 12px 0 0",
+}
+
+const successText = {
+  fontSize: "18px",
+  color: "#ffffff",
+  fontWeight: "700",
+  margin: "0",
+}
+
+const featuresSection = {
+  padding: "60px 40px",
+  background: "#16213e",
+}
+
+const featuresTitle = {
+  fontSize: "32px",
+  fontWeight: "800",
+  color: "#ffffff",
+  textAlign: "center" as const,
+  margin: "0 0 60px 0",
+}
+
+const featureGrid = {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
+  gap: "32px",
+  margin: "0 auto",
+  maxWidth: "800px",
+}
+
+const featureCard = {
+  background: "linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%)",
+  border: "1px solid rgba(139, 92, 246, 0.2)",
+  borderRadius: "20px",
+  padding: "40px 32px",
+  textAlign: "center" as const,
+  transition: "transform 0.3s ease",
+  backdropFilter: "blur(10px)",
+}
+
+const featureIcon = {
+  fontSize: "48px",
+  margin: "0 0 20px 0",
+  filter: "drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3))",
+}
+
+const featureTitle = {
+  fontSize: "20px",
+  fontWeight: "700",
+  color: "#ffffff",
+  margin: "0 0 16px 0",
+}
+
+const featureDescription = {
+  fontSize: "16px",
+  color: "#a1a1aa",
+  lineHeight: "1.6",
+  margin: "0",
+}
+
+const ctaSection = {
+  padding: "80px 40px",
+  textAlign: "center" as const,
+  background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)",
+}
+
+const ctaTitle = {
+  fontSize: "36px",
+  fontWeight: "800",
+  color: "#ffffff",
+  margin: "0 0 40px 0",
+  lineHeight: "1.2",
+}
+
+const buttonContainer = {
+  margin: "40px 0",
+}
+
+const primaryButton = {
+  background: "linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%)",
+  borderRadius: "50px",
+  color: "#ffffff",
+  fontSize: "20px",
+  fontWeight: "700",
+  textDecoration: "none",
+  display: "inline-block",
+  padding: "20px 48px",
+  boxShadow: "0 20px 40px rgba(139, 92, 246, 0.4)",
+  transition: "all 0.3s ease",
+  border: "none",
+}
+
+const ctaSubtext = {
+  fontSize: "16px",
+  color: "#a1a1aa",
+  margin: "24px 0 0 0",
+}
+
+const quickStartSection = {
+  padding: "60px 40px",
+  background: "rgba(139, 92, 246, 0.05)",
+}
+
+const quickStartTitle = {
+  fontSize: "28px",
+  fontWeight: "800",
+  color: "#ffffff",
+  textAlign: "center" as const,
+  margin: "0 0 40px 0",
+}
+
+const stepsList = {
+  display: "flex",
+  flexDirection: "column" as const,
+  gap: "24px",
+  maxWidth: "600px",
+  margin: "0 auto",
+}
+
+const step = {
+  display: "flex",
+  alignItems: "center",
+  background: "rgba(255, 255, 255, 0.03)",
+  borderRadius: "16px",
+  padding: "24px",
+  border: "1px solid rgba(255, 255, 255, 0.1)",
+}
+
+const stepNumber = {
+  background: "linear-gradient(135deg, #8b5cf6 0%, #06b6d4 100%)",
+  color: "#ffffff",
+  borderRadius: "50%",
+  width: "48px",
+  height: "48px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  fontSize: "20px",
+  fontWeight: "700",
+  margin: "0 24px 0 0",
+  boxShadow: "0 8px 16px rgba(139, 92, 246, 0.3)",
+}
+
+const stepText = {
+  fontSize: "18px",
+  color: "#e4e4e7",
+  margin: "0",
+  fontWeight: "500",
+}
+
+const supportSection = {
+  background: "linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%)",
+  borderRadius: "20px",
+  padding: "40px",
+  textAlign: "center" as const,
+  margin: "60px 40px",
+  border: "1px solid rgba(16, 185, 129, 0.2)",
+}
+
+const supportTitle = {
+  fontSize: "24px",
+  fontWeight: "800",
+  color: "#ffffff",
+  margin: "0 0 20px 0",
+}
+
+const supportText = {
+  fontSize: "18px",
+  color: "#a1a1aa",
+  lineHeight: "1.6",
+  margin: "0 0 32px 0",
+}
+
+const hr = {
+  borderColor: "rgba(255, 255, 255, 0.1)",
+  margin: "60px 40px 40px",
+}
+
+const footer = {
+  textAlign: "center" as const,
+  padding: "0 40px 60px",
+}
+
+const footerWelcome = {
+  fontSize: "24px",
+  color: "#ffffff",
+  fontWeight: "800",
+  margin: "0 0 12px 0",
+}
+
+const footerSignature = {
+  fontSize: "18px",
+  color: "#a1a1aa",
+  margin: "0 0 32px 0",
+  fontStyle: "italic",
+}
+
+const footerEmail = {
+  fontSize: "16px",
+  color: "#71717a",
+  margin: "0 0 20px 0",
+}
+
+const footerSmall = {
+  fontSize: "14px",
+  color: "#52525b",
+  margin: "0",
+}
+
 export function WelcomeEmail({ email }: WelcomeEmailProps) {
   return (
     <Html>
-      <Head>
-        <style>{`
-          @keyframes fadeInUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-          }
-          @keyframes bounce {
-            0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
-            40%, 43% { transform: translateY(-10px); }
-            70% { transform: translateY(-5px); }
-          }
-          @keyframes shimmer {
-            0% { background-position: -200px 0; }
-            100% { background-position: calc(200px + 100%) 0; }
-          }
-          .fade-in-up { animation: fadeInUp 0.8s ease-out; }
-          .bounce { animation: bounce 2s infinite; }
-          .shimmer {
-            background: linear-gradient(90deg, #f0f0f0 0px, #e0e0e0 40px, #f0f0f0 80px);
-            background-size: 200px;
-            animation: shimmer 2s infinite;
-          }
-        `}</style>
-      </Head>
+      <Head />
       <Body style={main}>
         <Container style={container}>
-          {/* Animated Header */}
+          {/* Stunning Header */}
           <Section style={headerSection}>
             <div style={logoContainer}>
-              <Text style={celebrationEmoji} className="bounce">🎉</Text>
-              <Text style={logo}>
-                🏠 Dashboard App
-              </Text>
-              <Text style={tagline}>Your Journey Starts Here!</Text>
+              <Img src="/placeholder.svg?height=48&width=48" alt="StockFlow Logo" style={logoImg} />
+              <Text style={appName}>StockFlow</Text>
             </div>
+            <Text style={tagline}>Inventory Management Reimagined</Text>
           </Section>
 
           <Section style={content}>
-            {/* Welcome Message */}
-            <div style={welcomeContainer}>
-              <Heading style={heading}>
-                Welcome to Dashboard App!
-              </Heading>
+            {/* Welcome Hero */}
+            <div style={welcomeSection}>
+              <Heading style={heading}>Welcome to the Future</Heading>
               <Text style={subheading}>
-                🚀 Your email has been successfully verified and your account is now active!
+                🚀 Your account is now active and ready to transform how you manage inventory
               </Text>
-            </div>
-
-            {/* Success Badge */}
-            <div style={successBadge}>
-              <Text style={successIcon}>✅</Text>
-              <Text style={successText}>Account Successfully Activated</Text>
-            </div>
-
-            {/* Feature Showcase */}
-            <div style={featuresSection}>
-              <Text style={featuresTitle}>🌟 What's waiting for you:</Text>
               
+              <div style={successBadge}>
+                <Text style={successIcon}>✨</Text>
+                <Text style={successText}>Account Successfully Activated</Text>
+              </div>
+            </div>
+
+            {/* Premium Features */}
+            <div style={featuresSection}>
+              <Text style={featuresTitle}>🔥 What Makes Us Different</Text>
               <div style={featureGrid}>
                 <div style={featureCard}>
-                  <Text style={featureIcon}>📊</Text>
-                  <Text style={featureTitle}>Smart Analytics</Text>
+                  <Text style={featureIcon}>🧠</Text>
+                  <Text style={featureTitle}>AI-Powered Insights</Text>
                   <Text style={featureDescription}>
-                    Get comprehensive insights into your product performance with real-time dashboards
+                    Advanced machine learning algorithms predict demand and optimize your inventory automatically
                   </Text>
                 </div>
-
                 <div style={featureCard}>
-                  <Text style={featureIcon}>📋</Text>
-                  <Text style={featureTitle}>Product Management</Text>
+                  <Text style={featureIcon}>⚡</Text>
+                  <Text style={featureTitle}>Real-Time Everything</Text>
                   <Text style={featureDescription}>
-                    Effortlessly manage your entire product catalog with advanced tools
+                    Lightning-fast updates across all devices with millisecond precision tracking
                   </Text>
                 </div>
-
                 <div style={featureCard}>
-                  <Text style={featureIcon}>📈</Text>
-                  <Text style={featureTitle}>Live Tracking</Text>
+                  <Text style={featureIcon}>🎯</Text>
+                  <Text style={featureTitle}>Smart Automation</Text>
                   <Text style={featureDescription}>
-                    Monitor your inventory levels and get alerts before you run out
+                    Intelligent workflows that handle routine tasks while you focus on growth
                   </Text>
                 </div>
-
                 <div style={featureCard}>
-                  <Text style={featureIcon}>🔍</Text>
-                  <Text style={featureTitle}>Smart Search</Text>
+                  <Text style={featureIcon}>🌐</Text>
+                  <Text style={featureTitle}>Global Scale</Text>
                   <Text style={featureDescription}>
-                    Find anything instantly with our powerful search and filtering system
+                    Multi-location, multi-currency support with enterprise-grade security
                   </Text>
                 </div>
               </div>
             </div>
 
-            {/* Call to Action */}
+            {/* CTA Hero */}
             <div style={ctaSection}>
-              <Text style={ctaTitle}>Ready to take control of your inventory?</Text>
+              <Text style={ctaTitle}>Ready to Experience the Magic?</Text>
               <div style={buttonContainer}>
                 <Button href="#" style={primaryButton}>
-                  🚀 Launch Dashboard
+                  ✨ Enter Your Dashboard
                 </Button>
               </div>
-              <Text style={ctaSubtext}>
-                Set up your first product in less than 2 minutes!
-              </Text>
+              <Text style={ctaSubtext}>Complete setup in under 60 seconds</Text>
             </div>
 
-            {/* Quick Start Guide */}
+            {/* Quick Start */}
             <div style={quickStartSection}>
-              <Text style={quickStartTitle}>⚡ Quick Start Guide</Text>
+              <Text style={quickStartTitle}>🎯 Get Started in 3 Steps</Text>
               <div style={stepsList}>
                 <div style={step}>
-                  <Text style={stepNumber}>1</Text>
-                  <Text style={stepText}>Add your first product category</Text>
+                  <div style={stepNumber}>1</div>
+                  <Text style={stepText}>Connect your existing inventory data or start fresh</Text>
                 </div>
                 <div style={step}>
-                  <Text style={stepNumber}>2</Text>
-                  <Text style={stepText}>Upload your product inventory</Text>
+                  <div style={stepNumber}>2</div>
+                  <Text style={stepText}>Configure your smart alerts and automation rules</Text>
                 </div>
                 <div style={step}>
-                  <Text style={stepNumber}>3</Text>
-                  <Text style={stepText}>Set up low stock alerts</Text>
-                </div>
-                <div style={step}>
-                  <Text style={stepNumber}>4</Text>
-                  <Text style={stepText}>Explore analytics dashboard</Text>
+                  <div style={stepNumber}>3</div>
+                  <Text style={stepText}>Watch as AI optimizes your inventory in real-time</Text>
                 </div>
               </div>
             </div>
 
-            {/* Support Section */}
+            {/* Support */}
             <div style={supportSection}>
-              <Text style={supportTitle}>💬 Need Help Getting Started?</Text>
+              <Text style={supportTitle}>💎 Premium Support Included</Text>
               <Text style={supportText}>
-                Our support team is here to help you succeed. Whether you have questions about features 
-                or need assistance with setup, we're just a message away.
+                24/7 expert support, dedicated onboarding specialist, and priority feature requests - all included with your account.
               </Text>
-              <div style={supportButtons}>
-                <Button href="#" style={secondaryButton}>
-                  📚 View Documentation
-                </Button>
-                <Button href="#" style={secondaryButton}>
-                  💬 Contact Support
-                </Button>
-              </div>
             </div>
 
             <Hr style={hr} />
 
             {/* Footer */}
             <div style={footer}>
-              <Text style={footerWelcome}>
-                Welcome aboard! 🎊
-              </Text>
-              <Text style={footerSignature}>
-                The Dashboard App Team
-              </Text>
+              <Text style={footerWelcome}>Welcome to the Revolution! 🎉</Text>
+              <Text style={footerSignature}>The StockFlow Innovation Team</Text>
               <Text style={footerEmail}>
-                This email was sent to <strong>{email}</strong>
+                Sent to <strong>{email}</strong>
               </Text>
-              <Text style={footerSmall}>
-                © 2025 Dashboard App. Empowering businesses with smart inventory management.
-              </Text>
+              <Text style={footerSmall}>© 2025 StockFlow. Transforming inventory management worldwide.</Text>
             </div>
           </Section>
         </Container>
       </Body>
     </Html>
   )
-}
-
-const main = {
-  backgroundColor: "#f8fafc",
-  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
-  margin: "0",
-  padding: "20px 0",
-}
-
-const container = {
-  backgroundColor: "#ffffff",
-  margin: "0 auto",
-  maxWidth: "600px",
-  borderRadius: "16px",
-  overflow: "hidden",
-  boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-}
-
-const headerSection = {
-  background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-  position: "relative" as const,
-}
-
-const logoContainer = {
-  padding: "48px 20px",
-  textAlign: "center" as const,
-  position: "relative" as const,
-}
-
-const celebrationEmoji = {
-  fontSize: "64px",
-  margin: "0 0 16px 0",
-  display: "block",
-}
-
-const logo = {
-  color: "#ffffff",
-  fontSize: "32px",
-  fontWeight: "bold",
-  margin: "0 0 8px 0",
-}
-
-const tagline = {
-  color: "#e2e8f0",
-  fontSize: "16px",
-  margin: "0",
-  fontWeight: "500",
-}
-
-const content = {
-  padding: "48px 40px",
-}
-
-const welcomeContainer = {
-  textAlign: "center" as const,
-  marginBottom: "40px",
-}
-
-const heading = {
-  fontSize: "36px",
-  fontWeight: "bold",
-  color: "#1e293b",
-  margin: "0 0 16px 0",
-  textAlign: "center" as const,
-}
-
-const subheading = {
-  fontSize: "18px",
-  color: "#475569",
-  margin: "0",
-  fontWeight: "500",
-}
-
-const successBadge = {
-  backgroundColor: "#dcfce7",
-  border: "2px solid #16a34a",
-  borderRadius: "50px",
-  padding: "16px 32px",
-  textAlign: "center" as const,
-  margin: "32px auto",
-  maxWidth: "300px",
-}
-
-const successIcon = {
-  fontSize: "24px",
-  margin: "0 8px 0 0",
-}
-
-const successText = {
-  fontSize: "16px",
-  color: "#15803d",
-  fontWeight: "bold",
-  margin: "0",
-}
-
-const featuresSection = {
-  margin: "48px 0",
-}
-
-const featuresTitle = {
-  fontSize: "20px",
-  fontWeight: "bold",
-  color: "#1e293b",
-  textAlign: "center" as const,
-  margin: "0 0 32px 0",
-}
-
-const featureGrid = {
-  display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-  gap: "24px",
-}
-
-const featureCard = {
-  backgroundColor: "#f8fafc",
-  border: "1px solid #e2e8f0",
-  borderRadius: "12px",
-  padding: "24px",
-  textAlign: "center" as const,
-}
-
-const featureIcon = {
-  fontSize: "32px",
-  margin: "0 0 12px 0",
-}
-
-const featureTitle = {
-  fontSize: "16px",
-  fontWeight: "bold",
-  color: "#1e293b",
-  margin: "0 0 8px 0",
-}
-
-const featureDescription = {
-  fontSize: "14px",
-  color: "#64748b",
-  lineHeight: "20px",
-  margin: "0",
-}
-
-const ctaSection = {
-  backgroundColor: "#f0f9ff",
-  borderRadius: "16px",
-  padding: "40px 32px",
-  textAlign: "center" as const,
-  margin: "48px 0",
-}
-
-const ctaTitle = {
-  fontSize: "22px",
-  fontWeight: "bold",
-  color: "#1e293b",
-  margin: "0 0 24px 0",
-}
-
-const buttonContainer = {
-  margin: "24px 0",
-}
-
-const primaryButton = {
-  backgroundColor: "#2563eb",
-  borderRadius: "12px",
-  color: "#ffffff",
-  fontSize: "18px",
-  fontWeight: "bold",
-  textDecoration: "none",
-  display: "inline-block",
-  padding: "16px 32px",
-  boxShadow: "0 4px 14px 0 rgba(37, 99, 235, 0.39)",
-}
-
-const ctaSubtext = {
-  fontSize: "14px",
-  color: "#64748b",
-  margin: "16px 0 0 0",
-}
-
-const quickStartSection = {
-  margin: "48px 0",
-}
-
-const quickStartTitle = {
-  fontSize: "20px",
-  fontWeight: "bold",
-  color: "#1e293b",
-  textAlign: "center" as const,
-  margin: "0 0 32px 0",
-}
-
-const stepsList = {
-  display: "flex",
-  flexDirection: "column" as const,
-  gap: "16px",
-}
-
-const step = {
-  display: "flex",
-  alignItems: "center",
-  backgroundColor: "#f8fafc",
-  borderRadius: "8px",
-  padding: "16px",
-}
-
-const stepNumber = {
-  backgroundColor: "#2563eb",
-  color: "#ffffff",
-  borderRadius: "50%",
-  width: "32px",
-  height: "32px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontSize: "16px",
-  fontWeight: "bold",
-  margin: "0 16px 0 0",
-}
-
-const stepText = {
-  fontSize: "16px",
-  color: "#374151",
-  margin: "0",
-}
-
-const supportSection = {
-  backgroundColor: "#fffbeb",
-  borderRadius: "12px",
-  padding: "32px",
-  textAlign: "center" as const,
-  margin: "48px 0",
-}
-
-const supportTitle = {
-  fontSize: "20px",
-  fontWeight: "bold",
-  color: "#92400e",
-  margin: "0 0 16px 0",
-}
-
-const supportText = {
-  fontSize: "16px",
-  color: "#92400e",
-  lineHeight: "24px",
-  margin: "0 0 24px 0",
-}
-
-const supportButtons = {
-  display: "flex",
-  justifyContent: "center",
-  gap: "16px",
-  flexWrap: "wrap" as const,
-}
-
-const secondaryButton = {
-  backgroundColor: "#f59e0b",
-  borderRadius: "8px",
-  color: "#ffffff",
-  fontSize: "14px",
-  fontWeight: "bold",
-  textDecoration: "none",
-  display: "inline-block",
-  padding: "12px 24px",
-}
-
-const hr = {
-  borderColor: "#e5e7eb",
-  margin: "48px 0 32px 0",
-}
-
-const footer = {
-  textAlign: "center" as const,
-}
-
-const footerWelcome = {
-  fontSize: "18px",
-  color: "#1e293b",
-  fontWeight: "bold",
-  margin: "0 0 8px 0",
-}
-
-const footerSignature = {
-  fontSize: "16px",
-  color: "#475569",
-  margin: "0 0 24px 0",
-  fontStyle: "italic",
-}
-
-const footerEmail = {
-  fontSize: "14px",
-  color: "#6b7280",
-  margin: "0 0 16px 0",
-}
-
-const footerSmall = {
-  fontSize: "12px",
-  color: "#9ca3af",
-  margin: "0",
 }
