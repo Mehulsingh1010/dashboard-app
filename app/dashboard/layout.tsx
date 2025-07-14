@@ -199,13 +199,13 @@ export default function DashboardLayout({
   return (
     <DashboardContext.Provider value={contextValue}>
       <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-gray-100 p-4">
+        <div className="max-h-[100vh]  flex w-full overflow-hidden  p-4">
           <AppSidebar userEmail={userEmail} onLogout={handleLogout} onNavigate={handleNavigate} />
-          <SidebarInset className="flex-1 ml-4 rounded-xl shadow-lg bg-white overflow-hidden">
+          <SidebarInset className="flex-1 ml-4  rounded-xl shadow-lg  overflow-hidden min-h-[calc(100vh-32px)]">
             {/* Header */}
             <Suspense fallback={<div>Loading...</div>}>
-              <header className="flex h-16 shrink-0 items-center justify-between px-6 border-b border-gray-200">
-                <div className="flex items-center gap-4">
+              <header className="flex h-16 shrink-0 items-center m-2 bg-gray-100 rounded-lg  justify-between px-6 ">
+                <div className="flex items-center  gap-4">
                   <SidebarTrigger className="md:hidden" />
                   <div>
                     <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
@@ -234,7 +234,11 @@ export default function DashboardLayout({
             </Suspense>
 
             {/* Main Content */}
-            <main className="flex-1 p-2 overflow-auto">{children}</main>
+            <main className="flex-1 p-2 overflow-auto rounded-lg border border-gray-200 bg-white">
+  <div className="h-full overflow-y-auto rounded-[inherit]">
+    {children}
+  </div>
+</main>
           </SidebarInset>
         </div>
         

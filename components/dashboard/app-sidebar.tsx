@@ -142,11 +142,13 @@ export function AppSidebar({
   const activeTab = getActiveTab()
 
   return (
+
+    
     <Sidebar
       variant="floating"
-      className="border-r-0 bg-white/95 backdrop-blur-sm shadow-lg rounded-xl m-4 h-[calc(100vh-2rem)] flex flex-col"
+      className="border-r-0  backdrop-blur-sm shadow-lg rounded-xl m-4 h-[calc(100vh-2rem)] flex flex-col"
     >
-      <SidebarHeader className="p-6 pb-4 flex-shrink-0">
+      <SidebarHeader className="p-6 bg-gray-100 pb-4 flex-shrink-0">
         <div className="flex items-center gap-3 mb-8">
           <div className="flex h-10 w-10 items-center justify-center">
             <Image src="/logo.png" alt="stocker" height={50} width={50} />

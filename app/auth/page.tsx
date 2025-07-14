@@ -169,58 +169,66 @@ export default function LoginPage() {
                 {"Enter your email to receive a secure verification code"}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-gray-700 font-medium">
-                    Email Address
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
-                  />
-                </div>
-                <Button
-                  onClick={handleSendOTP}
-                  className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full transition-all duration-200"
-                  disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <>
-                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                      Sending Code...
-                    </>
-                  ) : (
-                    <>
-                      Send Verification Code
-                      <ArrowRight className="ml-2 h-5 w-5" />
-                    </>
-                  )}
-                </Button>
-              </div>
-              {/* Security Notice */}
-              <div className="flex items-start space-x-3 p-4 bg-green-50 rounded-lg border border-green-200">
-                <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="text-sm text-green-800 font-medium">Secure Authentication</p>
-                  <p className="text-xs text-green-700">
-                    {"Your login is protected with end-to-end encryption and time-based OTP verification."}
-                  </p>
-                </div>
-              </div>
-              {/* Help Text */}
-              <div className="text-center">
-                <p className="text-sm text-gray-500">
-                  {"Having trouble? Check your spam folder or "}
-                  <button className="text-blue-600 hover:text-blue-700 font-medium">contact support</button>
-                </p>
-              </div>
-            </CardContent>
+            
+
+<CardContent className="space-y-6">
+  <form onSubmit={handleSendOTP} className="space-y-6">
+    <div className="space-y-2">
+      <Label htmlFor="email" className="text-gray-700 font-medium">
+        Email Address
+      </Label>
+      <Input
+        id="email"
+        type="email"
+        placeholder="Enter your email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        required
+        className="h-12 border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && email) {
+            handleSendOTP(e)
+          }
+        }}
+      />
+    </div>
+    <Button
+      type="submit"
+      className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-full transition-all duration-200"
+      disabled={isLoading}
+    >
+      {isLoading ? (
+        <>
+          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+          Sending Code...
+        </>
+      ) : (
+        <>
+          Send Verification Code
+          <ArrowRight className="ml-2 h-5 w-5" />
+        </>
+      )}
+    </Button>
+  </form>
+  
+  {/* Rest of your existing code (Security Notice, Help Text, etc.) */}
+  <div className="flex items-start space-x-3 p-4 bg-green-50 rounded-lg border border-green-200">
+    <CheckCircle className="h-5 w-5 text-green-600 mt-0.5 flex-shrink-0" />
+    <div>
+      <p className="text-sm text-green-800 font-medium">Secure Authentication</p>
+      <p className="text-xs text-green-700">
+        {"Your login is protected with end-to-end encryption and time-based OTP verification."}
+      </p>
+    </div>
+  </div>
+  
+  <div className="text-center">
+    <p className="text-sm text-gray-500">
+      {"Having trouble? Check your spam folder or "}
+      <button className="text-blue-600 hover:text-blue-700 font-medium">contact support</button>
+    </p>
+  </div>
+</CardContent>
           </Card>
         </div>
         {/* Mobile Features - Visible on small screens, below the form */}

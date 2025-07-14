@@ -232,86 +232,93 @@ export default function VerifyOTPPage() {
               <span className="font-medium text-gray-800">{email}</span>
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="otp" className="text-gray-700 font-medium">
-                  Verification Code
-                </Label>
-                <Input
-                  id="otp"
-                  type="text"
-                  placeholder="Enter 6-digit code"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  maxLength={6}
-                  className="text-center text-xl lg:text-2xl tracking-widest h-12 lg:h-14 border-gray-300 focus:border-blue-500 focus:ring-blue-500 font-mono rounded-lg"
-                  required
-                />
-              </div>
-              <Button
-                onClick={handleVerifyOTP}
-                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    Verifying...
-                  </>
-                ) : (
-                  <>
-                    <CheckCircle className="mr-2 h-5 w-5" />
-                    Verify Code
-                  </>
-                )}
-              </Button>
-            </div>
-            {/* Action Buttons */}
-            <div className="flex justify-between items-center pt-2">
-              <Button
-                onClick={() => router.push("/auth")}
-                variant="ghost"
-                className="text-gray-600 hover:text-gray-800 p-0 h-auto font-medium text-sm"
-              >
-                <ArrowLeft className="mr-1 h-3 w-3" />
-                Back to login
-              </Button>
-              <Button
-                onClick={handleResendOTP}
-                disabled={isResending}
-                variant="ghost"
-                className="text-blue-600 hover:text-blue-700 p-0 h-auto font-medium text-sm"
-              >
-                {isResending ? (
-                  <>
-                    <Loader2 className="mr-1 h-3 w-3 animate-spin" />
-                    Resending...
-                  </>
-                ) : (
-                  "Resend Code"
-                )}
-              </Button>
-            </div>
-            {/* Security Notice */}
-            <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <Clock className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-sm text-blue-800 font-medium">Time-Limited Code</p>
-                <p className="text-xs text-blue-700">
-                  Your verification code expires in 10 minutes for security purposes.
-                </p>
-              </div>
-            </div>
-            {/* Help Text */}
-            <div className="text-center">
-              <p className="text-sm text-gray-500">
-                Can't find the code?{" "}
-                <button className="text-blue-600 hover:text-blue-700 font-medium">Contact support</button> or check your
-                spam folder
-              </p>
-            </div>
-          </CardContent>
+
+<CardContent className="space-y-6">
+  <form onSubmit={handleVerifyOTP} className="space-y-6">
+    <div className="space-y-2">
+      <Label htmlFor="otp" className="text-gray-700 font-medium">
+        Verification Code
+      </Label>
+      <Input
+        id="otp"
+        type="text"
+        placeholder="Enter 6-digit code"
+        value={otp}
+        onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
+        maxLength={6}
+        className="text-center text-xl lg:text-2xl tracking-widest h-12 lg:h-14 border-gray-300 focus:border-blue-500 focus:ring-blue-500 font-mono rounded-lg"
+        required
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' && otp.length === 6) {
+            handleVerifyOTP(e)
+          }
+        }}
+      />
+    </div>
+    <Button
+      type="submit"
+      className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
+      disabled={isLoading}
+    >
+      {isLoading ? (
+        <>
+          <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+          Verifying...
+        </>
+      ) : (
+        <>
+          <CheckCircle className="mr-2 h-5 w-5" />
+          Verify Code
+        </>
+      )}
+    </Button>
+  </form>
+
+  {/* Rest of your existing code (Action Buttons, Security Notice, etc.) */}
+  <div className="flex justify-between items-center pt-2">
+    <Button
+      onClick={() => router.push("/auth")}
+      variant="ghost"
+      className="text-gray-600 hover:text-gray-800 p-0 h-auto font-medium text-sm"
+    >
+      <ArrowLeft className="mr-1 h-3 w-3" />
+      Back to login
+    </Button>
+    <Button
+      onClick={handleResendOTP}
+      disabled={isResending}
+      variant="ghost"
+      className="text-blue-600 hover:text-blue-700 p-0 h-auto font-medium text-sm"
+    >
+      {isResending ? (
+        <>
+          <Loader2 className="mr-1 h-3 w-3 animate-spin" />
+          Resending...
+        </>
+      ) : (
+        "Resend Code"
+      )}
+    </Button>
+  </div>
+  
+  <div className="flex items-start space-x-3 p-4 bg-blue-50 rounded-lg border border-blue-200">
+    <Clock className="h-5 w-5 text-blue-600 mt-0.5 flex-shrink-0" />
+    <div>
+      <p className="text-sm text-blue-800 font-medium">Time-Limited Code</p>
+      <p className="text-xs text-blue-700">
+        Your verification code expires in 10 minutes for security purposes.
+      </p>
+    </div>
+  </div>
+  
+  <div className="text-center">
+    <p className="text-sm text-gray-500">
+      Can't find the code?{" "}
+      <button className="text-blue-600 hover:text-blue-700 font-medium">Contact support</button> or check your
+      spam folder
+    </p>
+  </div>
+</CardContent>
         </Card>
         {/* Mobile Verification Steps - Below OTP */}
         <div className="lg:hidden w-full max-w-md mt-8 space-y-4">

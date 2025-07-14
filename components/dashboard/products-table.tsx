@@ -181,7 +181,7 @@ export function ProductsTable({ products, onRefresh }: ProductsTableProps) {
     <div className="space-y-6">
       <Card>
         <CardContent>
-          <div className="flex flex-col mt-2 gap-4 mb-6">
+          <div className="flex flex-col  mt-2 gap-4 mb-6">
             {/* Header with refresh button */}
             <div className="flex justify-between items-center">
               
