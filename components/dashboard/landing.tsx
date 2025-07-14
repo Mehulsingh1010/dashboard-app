@@ -17,9 +17,42 @@ import {
   Linkedin,
   Instagram,
 } from "lucide-react"
-import type React from "react"
-// Removed framer-motion as it was not in the original input, but would be needed for testimonials
-// import { motion } from "framer-motion"
+import { motion } from "framer-motion"
+import { useEffect, useRef, useState } from "react"
+
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.3
+    }
+  }
+}
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  }
+}
+
+const fadeInVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { duration: 0.8 } }
+}
+
+const slideInVariants = {
+  hidden: { x: -50, opacity: 0 },
+  visible: { x: 0, opacity: 1, transition: { duration: 0.6 } }
+}
 
 // Light mode custom icons
 function LineGraph({ color = "#2563eb" }: { color?: string }) {
@@ -68,203 +101,342 @@ function OTPIconWithCircle() {
   )
 }
 
-// Navbar Component
-function Navbar() {
+// AnimatedText component with line break support
+function AnimatedText({ text, className = "" }: { text: string; className?: string }) {
+  const lines = text.split('\n');
+  
   return (
-    <nav className="flex items-center justify-between p-4 md:p-6 max-w-7xl mx-auto relative z-30 font-poppins">
-      <div className="flex items-center space-x-2">
-        <Link href="/">
+    <div className={className}>
+      {lines.map((line, lineIndex) => (
+        <div key={lineIndex} className="flex justify-center">
+          {Array.from(line).map((letter, letterIndex) => (
+            <motion.span
+              key={letterIndex}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                delay: lineIndex * 0.3 + letterIndex * 0.05,
+                type: "spring",
+                damping: 12,
+                stiffness: 100
+              }}
+              className="inline-block"
+            >
+              {letter === " " ? "\u00A0" : letter}
+            </motion.span>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+}
 
-        <Image
-          src="/logo.png"
-          alt="StockFlow Logo"
-          width={34}
-          height={34}
-          className=" "
-        />
-         </Link>
-        
-        <span className="text-white text-lg md:text-xl font-bold">Stocker</span>
-      </div>
-      <div className="hidden md:flex space-x-6 lg:space-x-8">
-        <Link href="#" className="text-white hover:text-gray-200 transition-colors">
-          Home
-        </Link>
-        <Link href="#" className="text-white hover:text-gray-200 transition-colors">
-          Features
-        </Link>
-        <Link href="#" className="text-white hover:text-gray-200 transition-colors">
-          Pricing
-        </Link>
-        <Link href="#" className="text-white hover:text-gray-200 transition-colors">
-          Demo
-        </Link>
-        <Link href="#" className="text-white hover:text-gray-200 transition-colors">
-          Contact
-        </Link>
-      </div>
-      <Button
-        asChild
-        className="bg-white text-slate-800 hover:bg-gray-100 rounded-full px-4 py-2 md:px-6 md:py-2 font-semibold text-sm md:text-base"
+// Navbar Component with animation
+function Navbar() {
+  const [scrolled, setScrolled] = useState(false)
+  
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 10)
+    }
+    
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  return (
+    <motion.nav 
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className={`flex items-center justify-between p-4 md:p-6 max-w-7xl mx-auto relative z-30 font-poppins fixed w-full ${
+        scrolled ? 'bg-blue-600/90 backdrop-blur-sm shadow-md' : 'bg-transparent'
+      }`}
+    >
+      <motion.div 
+        initial={{ x: -20, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="flex items-center space-x-2"
       >
-        <Link href="/auth">Enter Dashboard</Link>
-      </Button>
-    </nav>
+        <Link href="/">
+          <Image
+            src="/logo.png"
+            alt="StockFlow Logo"
+            width={34}
+            height={34}
+            className="hover:scale-110 transition-transform duration-300"
+          />
+        </Link>
+        <span className="text-white text-lg md:text-xl font-bold">Stocker</span>
+      </motion.div>
+      <div className="hidden md:flex space-x-6 lg:space-x-8">
+        {['Home', 'Features', 'Pricing', 'Demo', 'Contact'].map((item, index) => (
+          <motion.div
+            key={item}
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 + index * 0.1 }}
+          >
+            <Link 
+              href="#" 
+              className="text-white hover:text-gray-200 transition-colors relative group"
+            >
+              {item}
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white group-hover:w-full transition-all duration-300"></span>
+            </Link>
+          </motion.div>
+        ))}
+      </div>
+      <motion.div
+        initial={{ x: 20, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ delay: 0.4 }}
+      >
+        <Button
+          asChild
+          className="bg-white text-slate-800 hover:bg-gray-100 rounded-full px-4 py-2 md:px-6 md:py-2 font-semibold text-sm md:text-base hover:scale-105 transition-transform"
+        >
+          <Link href="/auth">Enter Dashboard</Link>
+        </Button>
+      </motion.div>
+    </motion.nav>
   )
 }
 
-// Footer Component
+// Footer Component with animations restored
 function Footer() {
   return (
-    <footer className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-12 md:py-16 font-poppins">
+    <motion.footer 
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8 }}
+      className="bg-gradient-to-r from-blue-600 to-indigo-700 text-white py-12 md:py-16 font-poppins"
+    >
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
         {/* Company Info */}
         <div className="flex flex-col items-start">
-          <div className="flex items-center space-x-2 mb-4">
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="flex items-center space-x-2 mb-4"
+          >
             <Image
               src="/logo.png"
               alt="StockFlow Logo"
               width={34}
               height={34}
-              className=""
+              className="hover:rotate-12 transition-transform duration-300"
             />
             <span className="text-xl font-bold">Stocker</span>
-          </div>
-          <p className="text-blue-100 text-sm leading-relaxed">
+          </motion.div>
+          <motion.p 
+            initial={{ y: 10, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+            className="text-blue-100 text-sm leading-relaxed"
+          >
             Streamlining inventory management with smart analytics and secure solutions.
-          </p>
+          </motion.p>
         </div>
 
         {/* Product Links */}
-        <div>
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.3 }}
+        >
           <h3 className="text-lg font-semibold mb-4">Product</h3>
           <ul className="space-y-2 text-blue-100 text-sm">
-            <li>
-              <Link href="#" className="hover:text-white transition-colors">
-                Features
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:text-white transition-colors">
-                Pricing
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:text-white transition-colors">
-                Integrations
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:text-white transition-colors">
-                Demo
-              </Link>
-            </li>
+            {['Features', 'Pricing', 'Integrations', 'Demo'].map((item) => (
+              <motion.li
+                key={item}
+                whileHover={{ x: 5 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+              >
+                <Link href="#" className="hover:text-white transition-colors flex items-center">
+                  <span className="w-1 h-1 bg-blue-300 rounded-full mr-2"></span>
+                  {item}
+                </Link>
+              </motion.li>
+            ))}
           </ul>
-        </div>
+        </motion.div>
 
         {/* Company Links */}
-        <div>
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4 }}
+        >
           <h3 className="text-lg font-semibold mb-4">Company</h3>
           <ul className="space-y-2 text-blue-100 text-sm">
-            <li>
-              <Link href="#" className="hover:text-white transition-colors">
-                About Us
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:text-white transition-colors">
-                Careers
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:text-white transition-colors">
-                Blog
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:text-white transition-colors">
-                Contact
-              </Link>
-            </li>
+            {['About Us', 'Careers', 'Blog', 'Contact'].map((item) => (
+              <motion.li
+                key={item}
+                whileHover={{ x: 5 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+              >
+                <Link href="#" className="hover:text-white transition-colors flex items-center">
+                  <span className="w-1 h-1 bg-blue-300 rounded-full mr-2"></span>
+                  {item}
+                </Link>
+              </motion.li>
+            ))}
           </ul>
-        </div>
+        </motion.div>
 
         {/* Legal & Social Media */}
-        <div className="md:col-span-2 lg:col-span-1">
+        <motion.div 
+          initial={{ y: 20, opacity: 0 }}
+          whileInView={{ y: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.5 }}
+          className="md:col-span-2 lg:col-span-1"
+        >
           <h3 className="text-lg font-semibold mb-4">Legal</h3>
           <ul className="space-y-2 text-blue-100 text-sm mb-6">
-            <li>
-              <Link href="#" className="hover:text-white transition-colors">
-                Privacy Policy
-              </Link>
-            </li>
-            <li>
-              <Link href="#" className="hover:text-white transition-colors">
-                Terms of Service
-              </Link>
-            </li>
+            {['Privacy Policy', 'Terms of Service'].map((item) => (
+              <motion.li
+                key={item}
+                whileHover={{ x: 5 }}
+                transition={{ type: 'spring', stiffness: 300 }}
+              >
+                <Link href="#" className="hover:text-white transition-colors flex items-center">
+                  <span className="w-1 h-1 bg-blue-300 rounded-full mr-2"></span>
+                  {item}
+                </Link>
+              </motion.li>
+            ))}
           </ul>
           <h3 className="text-lg font-semibold mb-4">Connect With Us</h3>
           <div className="flex space-x-4">
-            <Link href="#" className="text-blue-100 hover:text-white transition-colors" aria-label="Facebook">
-              <Facebook className="w-6 h-6" />
-            </Link>
-            <Link href="#" className="text-blue-100 hover:text-white transition-colors" aria-label="Twitter">
-              <Twitter className="w-6 h-6" />
-            </Link>
-            <Link href="#" className="text-blue-100 hover:text-white transition-colors" aria-label="LinkedIn">
-              <Linkedin className="w-6 h-6" />
-            </Link>
-            <Link href="#" className="text-blue-100 hover:text-white transition-colors" aria-label="Instagram">
-              <Instagram className="w-6 h-6" />
-            </Link>
+            {[
+              { icon: Facebook, label: 'Facebook' },
+              { icon: Twitter, label: 'Twitter' },
+              { icon: Linkedin, label: 'LinkedIn' },
+              { icon: Instagram, label: 'Instagram' }
+            ].map((social, index) => (
+              <motion.div
+                key={social.label}
+                initial={{ scale: 0 }}
+                whileInView={{ scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.6 + index * 0.1, type: 'spring' }}
+                whileHover={{ y: -3 }}
+              >
+                <Link 
+                  href="#" 
+                  className="text-blue-100 hover:text-white transition-colors" 
+                  aria-label={social.label}
+                >
+                  <social.icon className="w-6 h-6" />
+                </Link>
+              </motion.div>
+            ))}
           </div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Copyright */}
-      <div className="mt-12 pt-8 border-t border-blue-700 text-center text-blue-200 text-sm">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ delay: 0.8 }}
+        className="mt-12 pt-8 border-t border-blue-700 text-center text-blue-200 text-sm"
+      >
         &copy; {new Date().getFullYear()} Stocker. All rights reserved.
-      </div>
-    </footer>
+      </motion.div>
+    </motion.footer>
   )
 }
 
 // Main Home Component
 export default function Landing() {
+  const featuresRef = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+        }
+      },
+      { threshold: 0.1 }
+    )
+
+    if (featuresRef.current) {
+      observer.observe(featuresRef.current)
+    }
+
+    return () => {
+      if (featuresRef.current) {
+        observer.unobserve(featuresRef.current)
+      }
+    }
+  }, [])
+
   return (
     <div className="flex flex-col min-h-screen font-poppins">
       {/* Hero section with gradient background */}
       <div className="relative w-full bg-gradient-to-r from-blue-600 to-indigo-700">
         <Navbar />
         {/* Hero content */}
-        <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 md:px-8 lg:px-12 py-12 md:py-16 lg:py-20">
-          <h1 className="text-white text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-tight max-w-4xl mb-4 md:mb-6">
-            Streamline Your Inventory Management with Smart Analytics
-          </h1>
-          <p className="text-white text-base md:text-lg lg:text-xl max-w-3xl mb-8 md:mb-10 opacity-90 leading-relaxed">
+        <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 md:px-8 lg:px-12 py-12 md:py-16 lg:py-20 pt-24">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-white text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-extrabold leading-tight max-w-4xl mb-4 md:mb-6"
+          >
+            <AnimatedText text={"Streamline Your Inventory\nManagement with Smart\nAnalytics"} />
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="text-white text-base md:text-lg lg:text-xl max-w-3xl mb-8 md:mb-10 opacity-90 leading-relaxed"
+          >
             Take control of your inventory with our powerful management system. Track products, analyze trends, and make
             data-driven decisions with secure OTP authentication and real-time insights.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+          </motion.p>
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="flex flex-col sm:flex-row gap-4 sm:gap-6"
+          >
             <Button
               asChild
-              className="bg-slate-800 text-white hover:bg-slate-700 rounded-full px-6 py-3 md:px-8 md:py-3 text-base md:text-lg font-semibold"
+              className="bg-slate-800 text-white hover:bg-slate-700 rounded-full px-6 py-3 md:px-8 md:py-3 text-base md:text-lg font-semibold hover:scale-105 transition-transform"
             >
               <Link href="/auth">Dive In</Link>
             </Button>
             <Button
               asChild
               variant="outline"
-              className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-slate-800 rounded-full px-6 py-3 md:px-8 md:py-3 text-base md:text-lg font-semibold"
+              className="bg-transparent border-2 border-white text-white hover:bg-white hover:text-slate-800 rounded-full px-6 py-3 md:px-8 md:py-3 text-base md:text-lg font-semibold hover:scale-105 transition-transform"
             >
               <Link href="/auth">Enter Dashboard</Link>
             </Button>
-          </div>
+          </motion.div>
         </div>
         {/* Dashboard image section positioned to overlap with white background */}
         <div className="relative w-full px-4 md:px-8 lg:px-12 pb-16 md:pb-20 lg:pb-24">
-          <div className="relative w-full max-w-6xl mx-auto aspect-[16/9] rounded-xl overflow-hidden shadow-2xl border border-gray-300 bg-gray-100 z-20">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, delay: 0.9 }}
+            className="relative w-full max-w-6xl mx-auto aspect-[16/9] rounded-xl overflow-hidden shadow-2xl border border-gray-300 bg-gray-100 z-20"
+          >
             <Image
               src="/landing/home2.png"
               alt="Inventory Management Dashboard"
@@ -273,7 +445,7 @@ export default function Landing() {
               className="rounded-xl"
               priority
             />
-          </div>
+          </motion.div>
         </div>
       </div>
 
@@ -392,25 +564,52 @@ export default function Landing() {
       </div>
 
       {/* CTA section */}
-      <div className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 py-12 md:py-16 lg:py-20">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="w-full bg-gradient-to-r from-blue-600 to-indigo-700 py-12 md:py-16 lg:py-20"
+      >
         <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 text-center">
-          <h3 className="text-white text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6">
+          <motion.h3 
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-white text-2xl md:text-3xl lg:text-4xl font-bold mb-4 md:mb-6"
+          >
             Ready to take control of your inventory?
-          </h3>
-          <p className="text-blue-100 text-base md:text-lg max-w-2xl mx-auto mb-6 md:mb-8">
+          </motion.h3>
+          <motion.p 
+            initial={{ y: 20, opacity: 0 }}
+            whileInView={{ y: 0, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-blue-100 text-base md:text-lg max-w-2xl mx-auto mb-6 md:mb-8"
+          >
             Join hundreds of businesses who have streamlined their inventory management with our smart analytics
             platform.
-          </p>
-          <Button
-            asChild
-            className="bg-white text-blue-600 hover:bg-gray-100 rounded-full px-6 py-3 md:px-8 md:py-3 text-base md:text-lg font-semibold"
+          </motion.p>
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
           >
-            <Link href="/auth">Start managing inventory today</Link>
-          </Button>
+            <Button
+              asChild
+              className="bg-white text-blue-600 hover:bg-gray-100 rounded-full px-6 py-3 md:px-8 md:py-3 text-base md:text-lg font-semibold"
+            >
+              <Link href="/auth">Start managing inventory today</Link>
+            </Button>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Footer Section */}
+      {/* Footer Section with animations restored */}
       <Footer />
     </div>
   )
