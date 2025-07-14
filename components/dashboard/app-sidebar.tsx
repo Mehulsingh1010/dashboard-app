@@ -12,8 +12,20 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
+import { useState, useEffect } from "react"
 
 interface AppSidebarProps {
   activeTab: string
@@ -21,9 +33,32 @@ interface AppSidebarProps {
   userEmail: string
   onLogout: () => void
   notificationCount?: number
+  onSidebarClose?: () => void // Add this prop for mobile sidebar control
 }
 
-export function AppSidebar({ activeTab, setActiveTab, userEmail, onLogout, notificationCount = 0 }: AppSidebarProps) {
+export function AppSidebar({ 
+  activeTab, 
+  setActiveTab, 
+  userEmail, 
+  onLogout, 
+  notificationCount = 0,
+  onSidebarClose 
+}: AppSidebarProps) {
+  const [isMobile, setIsMobile] = useState(false)
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false)
+
+  // Check if device is mobile
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768) // md breakpoint
+    }
+    
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
+
   const menuItems = [
     {
       id: "dashboard",
@@ -44,6 +79,38 @@ export function AppSidebar({ activeTab, setActiveTab, userEmail, onLogout, notif
 
   const getUserName = () => {
     return userEmail.split("@")[0].charAt(0).toUpperCase() + userEmail.split("@")[0].slice(1)
+  }
+
+  const handleMenuItemClick = (tabId: string) => {
+    setActiveTab(tabId)
+    
+    // Close sidebar on mobile when navigating to another page
+    if (isMobile && onSidebarClose) {
+      onSidebarClose()
+    }
+  }
+
+  const handleAddProductClick = () => {
+    setActiveTab("products")
+    
+    // Close sidebar on mobile when navigating to products
+    if (isMobile && onSidebarClose) {
+      onSidebarClose()
+    }
+  }
+
+  const handleSettingsClick = () => {
+    setActiveTab("settings")
+    
+    // Close sidebar on mobile when navigating to settings
+    if (isMobile && onSidebarClose) {
+      onSidebarClose()
+    }
+  }
+
+  const handleLogout = () => {
+    setShowLogoutDialog(false)
+    onLogout()
   }
 
   return (
@@ -80,7 +147,7 @@ export function AppSidebar({ activeTab, setActiveTab, userEmail, onLogout, notif
         {/* Quick Action Button */}
         <div className="mb-4 px-2">
           <Button
-            onClick={() => setActiveTab("products")}
+            onClick={handleAddProductClick}
             className="w-full justify-between group bg-gradient-to-br from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-md rounded-lg"
             size="sm"
           >
@@ -97,7 +164,7 @@ export function AppSidebar({ activeTab, setActiveTab, userEmail, onLogout, notif
             return (
               <SidebarMenuItem key={item.id}>
                 <SidebarMenuButton
-                  onClick={() => setActiveTab(item.id)}
+                  onClick={() => handleMenuItemClick(item.id)}
                   isActive={activeTab === item.id}
                   className={cn(
                     "w-full justify-start px-3 py-2.5 rounded-lg relative",
@@ -144,23 +211,44 @@ export function AppSidebar({ activeTab, setActiveTab, userEmail, onLogout, notif
             variant="ghost"
             size="icon"
             className="h-9 w-9 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg"
-            onClick={() => setActiveTab("settings")}
+            onClick={handleSettingsClick}
           >
             <Settings className="h-4 w-4" />
           </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-9 w-9 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg"
-            onClick={onLogout}
-          >
-            <LogOut className="h-4 w-4" />
-          </Button>
+          
+          {/* Logout Button with Confirmation Dialog */}
+          <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+            <AlertDialogTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg"
+              >
+                <LogOut className="h-4 w-4" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="bg-blue-600 text-white">
+              <AlertDialogHeader >
+                <AlertDialogTitle>Confirm Logout</AlertDialogTitle>
+                <AlertDialogDescription className="text-white">
+                  Are you sure you want to logout? You will need to sign in again to access your account.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="text-black">Cancel</AlertDialogCancel>
+                <AlertDialogAction 
+                  onClick={handleLogout}
+                  className="bg-red-600 hover:bg-red-700"
+                >
+                  Logout
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
         {/* Copyright */}
         <div className="text-center">
           <p className="text-xs text-gray-400 mb-1">© {new Date().getFullYear()} Inventory System</p>
-        
         </div>
       </SidebarFooter>
     </Sidebar>

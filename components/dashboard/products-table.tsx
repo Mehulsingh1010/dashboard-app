@@ -189,7 +189,7 @@ export function ProductsTable({ products, onRefresh }: ProductsTableProps) {
              
             </div>
             
-            {/* First row - Search and Category */}
+           
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
@@ -225,7 +225,7 @@ export function ProductsTable({ products, onRefresh }: ProductsTableProps) {
               </Button>
             </div>
             
-            {/* Second row - Stock, Price Range, and Sort */}
+   
             <div className="flex flex-col sm:flex-row gap-4">
               <Select value={stockFilter} onValueChange={handleStockChange}>
                 <SelectTrigger className="w-full sm:w-48">

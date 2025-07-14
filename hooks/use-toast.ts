@@ -1,6 +1,6 @@
 "use client"
 
-// Inspired by react-hot-toast library
+// Inspired by react-hot-toast library - Updated for Dashboard Theme
 import * as React from "react"
 
 import type {
@@ -8,8 +8,8 @@ import type {
   ToastProps,
 } from "@/components/ui/toast"
 
-const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_LIMIT = 3 // Increased to show more toasts
+const TOAST_REMOVE_DELAY = 3000 // 3 seconds auto-dismiss
 
 type ToasterToast = ToastProps & {
   id: string
@@ -142,6 +142,7 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, "id">
 
+// Enhanced toast function with theme-specific variants
 function toast({ ...props }: Toast) {
   const id = genId()
 
@@ -164,11 +165,95 @@ function toast({ ...props }: Toast) {
     },
   })
 
+  // Auto-dismiss after delay
+  addToRemoveQueue(id)
+
   return {
     id: id,
     dismiss,
     update,
   }
+}
+
+// Theme-specific toast variants
+toast.success = (props: Toast) => {
+  return toast({ ...props, variant: "default" }) // Using default variant
+}
+
+toast.error = (props: Toast) => {
+  return toast({ ...props, variant: "destructive" })
+}
+
+toast.warning = (props: Toast) => {
+  return toast({ ...props, variant: "default" }) // Using default variant
+}
+
+toast.info = (props: Toast) => {
+  return toast({ ...props, variant: "default" }) // Using default variant
+}
+
+// Loading toast with auto-dismiss
+toast.loading = (props: Toast) => {
+  const { id, dismiss, update } = toast({ 
+    ...props, 
+    variant: "default",
+    title: props.title || "Loading...",
+    description: props.description || "Please wait"
+  })
+
+  const success = (successProps: Toast) => {
+    update({
+      ...successProps,
+      variant: "default",
+      id
+    })
+  }
+
+  const error = (errorProps: Toast) => {
+    update({
+      ...errorProps,
+      variant: "destructive",
+      id
+    })
+  }
+
+  return { id, dismiss, update, success, error }
+}
+
+// Dashboard-specific toast messages
+toast.productLoaded = (count: number) => {
+  return toast.success({
+    title: "Products Loaded",
+    description: `Successfully loaded ${count} products`,
+  })
+}
+
+toast.productError = (error?: string) => {
+  return toast.error({
+    title: "Error Loading Products",
+    description: error || "Failed to load products. Please try again.",
+  })
+}
+
+toast.authSuccess = (action: "login" | "logout") => {
+  return toast.success({
+    title: action === "login" ? "Welcome Back!" : "Logged Out",
+    description: action === "login" ? "You have been successfully logged in" : "You have been successfully logged out",
+  })
+}
+
+toast.authError = (error?: string) => {
+  return toast.error({
+    title: "Authentication Error",
+    description: error || "Please check your credentials and try again.",
+  })
+}
+
+toast.dataRefresh = () => {
+  return toast.info({
+    title: "Data Refreshed",
+    description: "Your dashboard data has been updated",
+  })
 }
 
 function useToast() {

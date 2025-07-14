@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { AppSidebar } from "@/components/dashboard/app-sidebar"
-import { DashboardHome } from "@/components/dashboard/dashboard-home"
+import { DashboardHome } from "@/components/dashboard/page"
 import { ProductsTable } from "@/components/dashboard/products-table"
 import { ProductsAnalytics } from "@/components/dashboard/products-analytics"
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
@@ -53,9 +53,26 @@ interface Product {
   thumbnail: string
 }
 
+// Spiral Loader Component
+const SpiralLoader = () => {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+      <div className="relative">
+        {/* Outer spiral */}
+        <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+        {/* Inner spiral */}
+        <div className="absolute top-2 left-2 w-12 h-12 border-4 border-blue-100 border-t-blue-500 rounded-full animate-spin" style={{ animationDirection: 'reverse', animationDuration: '0.8s' }}></div>
+        {/* Center dot */}
+        <div className="absolute top-1/2 left-1/2 w-4 h-4 bg-blue-600 rounded-full transform -translate-x-1/2 -translate-y-1/2 animate-pulse"></div>
+      </div>
+    </div>
+  )
+}
+
 export default function DashboardPage() {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
+  const [tabLoading, setTabLoading] = useState(false)
   const [activeTab, setActiveTab] = useState("dashboard")
   const [userEmail, setUserEmail] = useState("")
   const router = useRouter()
@@ -117,8 +134,16 @@ export default function DashboardPage() {
     router.push("/")
   }
 
-  const handleNavigate = (tab: string) => {
+  const handleNavigate = async (tab: string) => {
+    if (tab === activeTab) return // Don't show loader if same tab
+    
+    setTabLoading(true)
+    
+    // Simulate loading time for tab change (you can adjust this or remove if not needed)
+    await new Promise(resolve => setTimeout(resolve, 500))
+    
     setActiveTab(tab)
+    setTabLoading(false)
   }
 
   if (loading) {
@@ -158,9 +183,12 @@ export default function DashboardPage() {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-gray-100 p-4">
+        {/* Tab Loading Spinner */}
+        {tabLoading && <SpiralLoader />}
+        
         <AppSidebar 
           activeTab={activeTab} 
-          setActiveTab={setActiveTab} 
+          setActiveTab={handleNavigate} // Use handleNavigate instead of setActiveTab directly
           userEmail={userEmail} 
           onLogout={handleLogout} 
         />
@@ -199,6 +227,7 @@ export default function DashboardPage() {
             {activeTab === "dashboard" && (
               <DashboardHome 
                 onNavigate={handleNavigate} 
+                products={products}
               />
             )}
             {activeTab === "products" && (

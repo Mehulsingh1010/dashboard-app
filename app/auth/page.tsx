@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { toast } from "@/hooks/use-toast"
+import { toast } from "@/hooks/use-toast" // Added missing import
 import { Mail, Loader2, Shield, Package, BarChart, Lock, CheckCircle, ArrowRight, ArrowLeft } from "lucide-react"
 
 export default function LoginPage() {
@@ -82,7 +82,7 @@ export default function LoginPage() {
       description: "Real-time tracking and automated alerts for seamless management",
     },
     {
-      icon: BarChart, // Using BarChart as it's present in homepage features
+      icon: BarChart,
       title: "Powerful Analytics",
       description: "Data-driven insights to optimize your business operations",
     },
@@ -104,13 +104,7 @@ export default function LoginPage() {
         <div className="relative z-10 h-full flex flex-col justify-center">
           {/* Logo/Brand */}
           <div className="flex items-center mb-8">
-            <Image
-              src="/logo.png"
-              alt="Stocker Logo"
-              width={34}
-              height={34}
-              className=""
-            />
+            <Image src="/logo.png" alt="Stocker Logo" width={34} height={34} className="" />
             <span className="ml-4 text-3xl font-bold text-white">Stocker</span>
           </div>
           {/* Main Heading */}
@@ -148,27 +142,21 @@ export default function LoginPage() {
       </div>
       {/* Right Section - Login Form & Mobile Content */}
       <div className="flex-1 lg:flex-[0.4] flex flex-col items-center justify-center p-6 sm:p-8">
+        {/* Go back home button for mobile */}
+        <div className="lg:hidden flex justify-start w-full max-w-md mb-4">
+          <Link href="/" passHref>
+            <Button variant="ghost" className="text-white hover:bg-white/10">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Go back home
+            </Button>
+          </Link>
+        </div>
+        {/* Mobile Logo/Brand - Visible on small screens */}
+        <div className="lg:hidden flex items-center justify-center mb-8 mt-8">
+          <Image src="/logo.png" alt="Stocker Logo" width={34} height={34} className="" />
+          <span className="ml-2 text-xl font-bold text-white">Stocker</span>
+        </div>
         <div className="w-full max-w-md">
-          {/* Go back home button for mobile */}
-          <div className="lg:hidden flex justify-start mb-4">
-            <Link href="/" passHref>
-              <Button variant="ghost" className="text-gray-600 hover:bg-gray-100">
-                <ArrowLeft className="mr-2 h-4 w-4" />
-                Go back home
-              </Button>
-            </Link>
-          </div>
-          {/* Mobile Logo/Brand - Visible on small screens */}
-          <div className="lg:hidden flex items-center justify-center mb-8 mt-8">
-            <Image
-              src="/logo.png"
-              alt="Stocker Logo"
-              width={34}
-              height={34}
-              className=""
-            />
-            <span className="ml-2 text-xl font-bold text-gray-900">Stocker</span>
-          </div>
           <Card className="border border-gray-200 shadow-lg bg-white rounded-xl p-6 sm:p-8">
             <CardHeader className="space-y-1 text-center pb-8">
               <div className="flex justify-center mb-6">
@@ -237,15 +225,9 @@ export default function LoginPage() {
         </div>
         {/* Mobile Features - Visible on small screens, below the form */}
         <div className="lg:hidden w-full max-w-md mt-8 space-y-4">
-          {" "}
-          {/* Adjusted space-y */}
           {features.map((feature, index) => (
             <div key={index} className="flex items-start space-x-4">
-              {" "}
-              {/* Changed from Card to div */}
-              <div className="p-2 bg-blue-600/20 rounded-md flex-shrink-0">
-                {" "}
-                {/* Adjusted background */}
+              <div className="p-2 bg-white/20 rounded-md flex-shrink-0">
                 <feature.icon className="h-6 w-6 text-white" />
               </div>
               <div>
@@ -256,8 +238,6 @@ export default function LoginPage() {
           ))}
           {/* Mobile Security Badge */}
           <div className="flex items-center justify-center space-x-3 text-white opacity-80 mt-6">
-            {" "}
-            {/* Adjusted text color */}
             <Lock className="h-5 w-5" />
             <span className="text-sm">{"ISO 27001 Certified • SOC 2 Type II Compliant"}</span>
           </div>

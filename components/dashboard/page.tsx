@@ -2,10 +2,22 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Package, Plus, BarChart3, TrendingUp, Target, User, ShoppingCart, DollarSign, Eye, AlertTriangle, Star, Filter, MoreHorizontal } from "lucide-react"
+import { Package, ShoppingCart, DollarSign, AlertTriangle, Filter } from "lucide-react"
 import { useState, useEffect } from "react"
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell, BarChart, Bar } from 'recharts'
+import {
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts"
 
+// Updated Product interface to match your JSON structure
 interface Product {
   id: number
   title: string
@@ -15,108 +27,107 @@ interface Product {
   discountPercentage: number
   rating: number
   stock: number
+  tags: string[]
   brand: string
+  sku: string
+  weight: number
+  dimensions: {
+    width: number
+    height: number
+    depth: number
+  }
+  warrantyInformation: string
+  shippingInformation: string
+  availabilityStatus: string
   reviews: Array<{
     rating: number
     comment: string
+    date: string
     reviewerName: string
+    reviewerEmail: string
   }>
+  returnPolicy: string
+  minimumOrderQuantity: number
+  meta: {
+    createdAt: string
+    updatedAt: string
+    barcode: string
+    qrCode: string
+  }
+  images: string[]
+  thumbnail: string
 }
 
 interface DashboardHomeProps {
   onNavigate?: (tab: string) => void
+  products: Product[] 
 }
 
-export function DashboardHome({ onNavigate }: DashboardHomeProps) {
-  const [products, setProducts] = useState<Product[]>([])
+export function DashboardHome({ onNavigate, products }: DashboardHomeProps) {
   const [counters, setCounters] = useState({ products: 0, categories: 0, lowStock: 0, totalSales: 0, revenue: 0 })
-  const [loading, setLoading] = useState(true)
 
-  // Load data from JSON file
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const response = await fetch('/example.json')
-        const data = await response.json()
-        setProducts(data.products || [])
-        setLoading(false)
-      } catch (error) {
-        console.error('Error loading data:', error)
-        setLoading(false)
-      }
-    }
-    loadData()
-  }, [])
 
-  // Calculate dashboard metrics from actual data
   useEffect(() => {
     if (products.length > 0) {
-      const categories = [...new Set(products.map(p => p.category))]
-      const lowStockItems = products.filter(p => p.stock < 20)
-      const totalSales = products.reduce((sum, p) => sum + (100 - p.stock), 0)
-      const revenue = products.reduce((sum, p) => sum + (p.price * (100 - p.stock)), 0)
-
+      const categories = [...new Set(products.map((p) => p.category))]
+      const lowStockItems = products.filter((p) => p.stock < 20)
+      const totalSales = products.reduce((sum, p) => sum + (100 - p.stock), 0) 
+      const revenue = products.reduce((sum, p) => sum + p.price * (100 - p.stock), 0)
       setCounters({
         products: products.length,
         categories: categories.length,
         lowStock: lowStockItems.length,
         totalSales,
-        revenue: Math.round(revenue)
+        revenue: Math.round(revenue),
       })
+    } else {
+      // Reset counters if no products are available
+      setCounters({ products: 0, categories: 0, lowStock: 0, totalSales: 0, revenue: 0 })
     }
   }, [products])
 
-
-  const salesData = products.length > 0 ? [
-    { name: 'Jan', value: 2400 },
-    { name: 'Feb', value: 1398 },
-    { name: 'Mar', value: 4200 },
-    { name: 'Apr', value: 3908 },
-    { name: 'May', value: 4800 },
-    { name: 'Jun', value: 3800 },
-    { name: 'Jul', value: 4300 },
-  ] : []
-
-  // Generate category data
-  const categoryData = products.length > 0 ? (() => {
-    const categoryCount = products.reduce((acc, product) => {
-      acc[product.category] = (acc[product.category] || 0) + 1
-      return acc
-    }, {} as Record<string, number>)
-
-    const colors = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
-    
-    return Object.entries(categoryCount).map(([category, count], index) => ({
-      name: category.charAt(0).toUpperCase() + category.slice(1),
-      value: count,
-      color: colors[index % colors.length]
-    }))
-  })() : []
-
-
-  const recentOrders = [
-    { id: 'ORD-001', customer: 'Mehul', amount: '$250.00', status: 'Completed' },
-    { id: 'ORD-002', customer: 'Dipesh', amount: '$180.00', status: 'Pending' },
-    { id: 'ORD-003', customer: 'Lokesh', amount: '$320.00', status: 'Processing' },
-    { id: 'ORD-004', customer: 'Messi', amount: '$95.00', status: 'Completed' },
+  // Static sales data for the chart, as it's not directly derived from the provided product structure
+  const salesData = [
+    { name: "Jan", value: 2400 },
+    { name: "Feb", value: 1398 },
+    { name: "Mar", value: 4200 },
+    { name: "Apr", value: 3908 },
+    { name: "May", value: 4800 },
+    { name: "Jun", value: 3800 },
+    { name: "Jul", value: 4300 },
   ]
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading...</p>
-        </div>
-      </div>
-    )
-  }
+  // Generate category data from products prop
+  const categoryData =
+    products.length > 0
+      ? (() => {
+          const categoryCount = products.reduce(
+            (acc, product) => {
+              acc[product.category] = (acc[product.category] || 0) + 1
+              return acc
+            },
+            {} as Record<string, number>,
+          )
+          const colors = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#8b5cf6"]
+
+          return Object.entries(categoryCount).map(([category, count], index) => ({
+            name: category.charAt(0).toUpperCase() + category.slice(1),
+            value: count,
+            color: colors[index % colors.length],
+          }))
+        })()
+      : []
+
+  const recentOrders = [
+    { id: "ORD-001", customer: "Mehul", amount: "$250.00", status: "Completed" },
+    { id: "ORD-002", customer: "Dipesh", amount: "$180.00", status: "Pending" },
+    { id: "ORD-003", customer: "Lokesh", amount: "$320.00", status: "Processing" },
+    { id: "ORD-004", customer: "Messi", amount: "$95.00", status: "Completed" },
+  ]
 
   return (
     <div className="min-h-screen rounded-lg bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
-    
-
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <Card className="bg-white border border-gray-200 shadow-sm">
@@ -133,7 +144,6 @@ export function DashboardHome({ onNavigate }: DashboardHomeProps) {
               </div>
             </CardContent>
           </Card>
-
           <Card className="bg-white border border-gray-200 shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -148,7 +158,6 @@ export function DashboardHome({ onNavigate }: DashboardHomeProps) {
               </div>
             </CardContent>
           </Card>
-
           <Card className="bg-white border border-gray-200 shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -163,7 +172,6 @@ export function DashboardHome({ onNavigate }: DashboardHomeProps) {
               </div>
             </CardContent>
           </Card>
-
           <Card className="bg-white border border-gray-200 shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
@@ -179,7 +187,6 @@ export function DashboardHome({ onNavigate }: DashboardHomeProps) {
             </CardContent>
           </Card>
         </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Analytics Chart */}
           <div className="lg:col-span-2">
@@ -203,28 +210,28 @@ export function DashboardHome({ onNavigate }: DashboardHomeProps) {
                     <AreaChart data={salesData}>
                       <defs>
                         <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.1}/>
-                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                          <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.1} />
+                          <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
                         </linearGradient>
                       </defs>
                       <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
                       <XAxis dataKey="name" stroke="#64748b" fontSize={12} />
                       <YAxis stroke="#64748b" fontSize={12} />
-                      <Tooltip 
-                        contentStyle={{ 
-                          backgroundColor: 'white', 
-                          border: '1px solid #e2e8f0', 
-                          borderRadius: '8px',
-                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "white",
+                          border: "1px solid #e2e8f0",
+                          borderRadius: "8px",
+                          boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
                         }}
                       />
-                      <Area 
-                        type="monotone" 
-                        dataKey="value" 
-                        stroke="#3b82f6" 
+                      <Area
+                        type="monotone"
+                        dataKey="value"
+                        stroke="#3b82f6"
                         strokeWidth={2}
-                        fillOpacity={1} 
-                        fill="url(#colorSales)" 
+                        fillOpacity={1}
+                        fill="url(#colorSales)"
                       />
                     </AreaChart>
                   </ResponsiveContainer>
@@ -232,7 +239,6 @@ export function DashboardHome({ onNavigate }: DashboardHomeProps) {
               </CardContent>
             </Card>
           </div>
-
           {/* Category Distribution */}
           <div>
             <Card className="bg-white border border-gray-200 shadow-sm">
@@ -244,14 +250,7 @@ export function DashboardHome({ onNavigate }: DashboardHomeProps) {
                 <div className="h-48 mb-4">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie
-                        data={categoryData}
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={60}
-                        dataKey="value"
-                        stroke="none"
-                      >
+                      <Pie data={categoryData} cx="50%" cy="50%" outerRadius={60} dataKey="value" stroke="none">
                         {categoryData.map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
@@ -264,10 +263,7 @@ export function DashboardHome({ onNavigate }: DashboardHomeProps) {
                   {categoryData.map((item, index) => (
                     <div key={index} className="flex items-center justify-between text-sm">
                       <div className="flex items-center">
-                        <div 
-                          className="w-3 h-3 rounded-full mr-2" 
-                          style={{ backgroundColor: item.color }}
-                        ></div>
+                        <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: item.color }}></div>
                         <span className="text-gray-700">{item.name}</span>
                       </div>
                       <span className="text-gray-500">{item.value}</span>
@@ -278,13 +274,12 @@ export function DashboardHome({ onNavigate }: DashboardHomeProps) {
             </Card>
           </div>
         </div>
-
         {/* Recent Orders */}
         <Card className="bg-white border border-gray-200 shadow-sm mt-6">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
               <CardTitle className="text-lg font-semibold text-gray-900">Recent Orders</CardTitle>
-              <Button variant="outline" size="sm" className="text-sm">
+              <Button variant="outline" size="sm" className="text-sm bg-transparent">
                 <Filter className="w-4 h-4 mr-2" />
                 Filter
               </Button>
@@ -308,11 +303,15 @@ export function DashboardHome({ onNavigate }: DashboardHomeProps) {
                       <td className="py-3 px-4 text-sm text-gray-900">{order.customer}</td>
                       <td className="py-3 px-4 text-sm text-gray-900">{order.amount}</td>
                       <td className="py-3 px-4">
-                        <span className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
-                          order.status === 'Completed' ? 'bg-green-100 text-green-800' :
-                          order.status === 'Pending' ? 'bg-yellow-100 text-yellow-800' :
-                          'bg-blue-100 text-blue-800'
-                        }`}>
+                        <span
+                          className={`inline-flex px-2 py-1 text-xs font-medium rounded-full ${
+                            order.status === "Completed"
+                              ? "bg-green-100 text-green-800"
+                              : order.status === "Pending"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : "bg-blue-100 text-blue-800"
+                          }`}
+                        >
                           {order.status}
                         </span>
                       </td>

@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { toast } from "@/hooks/use-toast"
-import { Shield, Loader2, ArrowLeft, Package, CheckCircle, Clock, Smartphone, Mail, Lock } from "lucide-react"
+import { Shield, Loader2, ArrowLeft, Mail, Lock, CheckCircle, Clock, Smartphone } from "lucide-react"
 
 export default function VerifyOTPPage() {
   const [otp, setOtp] = useState("")
@@ -22,7 +22,7 @@ export default function VerifyOTPPage() {
   useEffect(() => {
     const verificationEmail = localStorage.getItem("verificationEmail")
     if (!verificationEmail) {
-      router.push("/")
+      router.push("/auth") // Redirect to login if no email is found
       return
     }
     setEmail(verificationEmail)
@@ -134,10 +134,10 @@ export default function VerifyOTPPage() {
       <div className="hidden lg:flex lg:flex-[0.6] relative overflow-hidden p-12">
         {/* Go back home button for desktop */}
         <div className="absolute top-8 left-12 z-20">
-          <Link href="/" passHref>
+          <Link href="/auth" passHref>
             <Button variant="ghost" className="text-white hover:bg-white/10">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Go back home
+              Go back
             </Button>
           </Link>
         </div>
@@ -150,29 +150,20 @@ export default function VerifyOTPPage() {
         <div className="absolute top-20 left-20 w-16 h-16 bg-white/10 rounded-full blur-xl animate-pulse"></div>
         <div className="absolute top-40 right-32 w-24 h-24 bg-indigo-400/20 rounded-full blur-xl animate-pulse delay-1000"></div>
         <div className="absolute bottom-32 left-16 w-20 h-20 bg-blue-400/20 rounded-full blur-xl animate-pulse delay-2000"></div>
-
         <div className="relative z-10 h-full flex flex-col justify-center">
           {/* Logo/Brand */}
           <div className="flex items-center mb-6">
-            <div className="">
-              <Image
-                src="/logo.png"
-                alt="Stocker Logo"
-                width={34}
-                height={34}
-                className=""
-              />
-            </div>
-            <span className="ml-4 text-2xl font-bold text-white">Stocker</span>
+            <Image src="/logo.png" alt="Stocker Logo" width={34} height={34} className="" />
+            <span className="ml-4 text-3xl font-bold text-white">Stocker</span>
           </div>
           {/* Main Heading */}
           <div className="mb-4">
-            <h1 className="text-4xl lg:text-5xl xl:text-6xl font-extrabold text-white mb-4 leading-tight">
+            <h1 className="text-5xl font-extrabold text-white mb-4 leading-tight">
               Almost
               <br />
               <span className="text-blue-200">There!</span>
             </h1>
-            <p className="text-lg text-blue-100 leading-relaxed max-w-lg opacity-90">
+            <p className="text-lg text-white opacity-90 leading-relaxed max-w-lg">
               We've sent a secure verification code to your email. This extra step ensures your inventory data stays
               protected.
             </p>
@@ -211,68 +202,25 @@ export default function VerifyOTPPage() {
           </div>
         </div>
       </div>
-
-      {/* Right Section - 40% */}
+      {/* Right Section - OTP Form & Mobile Content */}
       <div className="flex-1 lg:flex-[0.4] flex flex-col items-center justify-center p-6 sm:p-8">
         {/* Go back home button for mobile */}
-        <div className="lg:hidden flex justify-start mb-4">
-          <Link href="/" passHref>
-            <Button variant="ghost" className="text-gray-600 hover:bg-gray-100">
+        <div className="lg:hidden flex justify-start w-full max-w-md mb-4">
+          <Link href="/auth" passHref>
+            <Button variant="ghost" className="text-white hover:bg-white/10">
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Go back home
+              Go back
             </Button>
           </Link>
         </div>
         {/* Mobile Logo/Brand - Visible on small screens */}
         <div className="lg:hidden flex items-center justify-center mb-8 mt-8">
-          <Image
-            src="/logo.png"
-            alt="Stocker Logo"
-            width={34}
-            height={34}
-            className=""
-          />
-          <span className="ml-2 text-xl font-bold text-gray-900">Stocker</span>
+          <Image src="logo.png" alt="Stocker Logo" width={34} height={34} className="" />
+          <span className="ml-2 text-xl font-bold text-white">Stocker</span>
         </div>
-
-        {/* Mobile Verification Steps - Visible on small screens, above the form */}
-        <div className="lg:hidden w-full max-w-md mt-6 space-y-4">
-          <h3 className="text-white text-lg font-semibold mb-4">Verification Process</h3>
-          {verificationSteps.map((step, index) => (
-            <div key={index} className="flex items-start space-x-4 group">
-              <div
-                className={`p-2 rounded-md flex-shrink-0 transition-all duration-300 ${
-                  step.status === "completed"
-                    ? "bg-blue-600/20 text-white"
-                    : step.status === "active"
-                      ? "bg-blue-600/30 text-white"
-                      : "bg-blue-600/10 text-white/60"
-                }`}
-              >
-                <step.icon className="h-6 w-6" />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center space-x-2">
-                  <h4 className="text-white font-semibold">{step.title}</h4>
-                  {step.status === "completed" && <CheckCircle className="h-4 w-4 text-blue-200" />}
-                  {step.status === "active" && <div className="h-2 w-2 bg-white rounded-full animate-pulse"></div>}
-                </div>
-                <p className="text-blue-100 text-sm">{step.description}</p>
-              </div>
-            </div>
-          ))}
-          {/* Mobile Security Badge */}
-          <div className="flex items-center justify-center space-x-3 text-white opacity-80 mt-4 mb-8">
-            {" "}
-            {/* Added mb-8 for spacing before the card */}
-            <Lock className="h-5 w-5" />
-            <span className="text-sm">Code expires in 10 minutes • Secure authentication</span>
-          </div>
-        </div>
-
-        <Card className="border border-gray-200 shadow-lg bg-white rounded-xl p-6 sm:p-8">
-          <CardHeader className="space-y-1 text-center pb-6">
-            <div className="flex justify-center mb-4">
+        <Card className="border border-gray-200 shadow-lg bg-white rounded-xl p-6 sm:p-8 w-full max-w-md">
+          <CardHeader className="space-y-1 text-center pb-8">
+            <div className="flex justify-center mb-6">
               <div className="p-4 bg-blue-50 rounded-2xl border border-blue-100">
                 <Shield className="h-8 w-8 text-blue-600" />
               </div>
@@ -297,7 +245,7 @@ export default function VerifyOTPPage() {
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
                   maxLength={6}
-                  className="text-center text-2xl tracking-widest h-14 border-gray-300 focus:border-blue-500 focus:ring-blue-500 font-mono rounded-lg"
+                  className="text-center text-xl lg:text-2xl tracking-widest h-12 lg:h-14 border-gray-300 focus:border-blue-500 focus:ring-blue-500 font-mono rounded-lg"
                   required
                 />
               </div>
@@ -322,22 +270,22 @@ export default function VerifyOTPPage() {
             {/* Action Buttons */}
             <div className="flex justify-between items-center pt-2">
               <Button
-                onClick={() => router.push("/")}
+                onClick={() => router.push("/auth")}
                 variant="ghost"
-                className="text-gray-600 hover:text-gray-800 p-0 h-auto font-medium"
+                className="text-gray-600 hover:text-gray-800 p-0 h-auto font-medium text-sm"
               >
-                <ArrowLeft className="mr-1 h-4 w-4" />
+                <ArrowLeft className="mr-1 h-3 w-3" />
                 Back to login
               </Button>
               <Button
                 onClick={handleResendOTP}
                 disabled={isResending}
                 variant="ghost"
-                className="text-blue-600 hover:text-blue-700 p-0 h-auto font-medium"
+                className="text-blue-600 hover:text-blue-700 p-0 h-auto font-medium text-sm"
               >
                 {isResending ? (
                   <>
-                    <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-1 h-3 w-3 animate-spin" />
                     Resending...
                   </>
                 ) : (
@@ -365,6 +313,38 @@ export default function VerifyOTPPage() {
             </div>
           </CardContent>
         </Card>
+        {/* Mobile Verification Steps - Below OTP */}
+        <div className="lg:hidden w-full max-w-md mt-8 space-y-4">
+          <h3 className="text-white text-lg font-semibold mb-4 text-center">Verification Process</h3>
+          {verificationSteps.map((step, index) => (
+            <div key={index} className="flex items-start space-x-4 group">
+              <div
+                className={`p-2 rounded-md flex-shrink-0 transition-all duration-300 ${
+                  step.status === "completed"
+                    ? "bg-white/20 text-white"
+                    : step.status === "active"
+                      ? "bg-white/30 text-white"
+                      : "bg-white/10 text-white/60"
+                }`}
+              >
+                <step.icon className="h-6 w-6" />
+              </div>
+              <div className="flex-1">
+                <div className="flex items-center space-x-2">
+                  <h4 className="text-white font-semibold text-lg">{step.title}</h4>
+                  {step.status === "completed" && <CheckCircle className="h-4 w-4 text-blue-200" />}
+                  {step.status === "active" && <div className="h-2 w-2 bg-white rounded-full animate-pulse"></div>}
+                </div>
+                <p className="text-blue-100 text-sm">{step.description}</p>
+              </div>
+            </div>
+          ))}
+          {/* Mobile Security Badge */}
+          <div className="flex items-center justify-center space-x-3 text-white opacity-80 mt-6">
+            <Lock className="h-5 w-5" />
+            <span className="text-sm">Code expires in 10 minutes • Secure authentication</span>
+          </div>
+        </div>
       </div>
     </div>
   )

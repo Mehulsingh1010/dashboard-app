@@ -1,240 +1,274 @@
-import { Html, Head, Body, Container, Section, Text, Heading, Hr, Img } from "@react-email/components"
+import {
+  Body,
+  Column,
+  Container,
+  Head,
+  Heading,
+  Html,
+  Img,
+  Link,
+  Preview,
+  Row,
+  Section,
+  Text,
+} from '@react-email/components';
 
 interface OTPEmailProps {
-  otp: string
-  email: string
+  otp: string;
+  email: string;
 }
 
+const baseUrl = process.env.VERCEL_URL
+  ? `https://${process.env.VERCEL_URL}`
+  : '';
+
+export const OTPEmail=({ otp, email }: OTPEmailProps) =>(
+  <Html>
+    <Head />
+    <Preview>Your Stocker verification code</Preview>
+    <Body style={main}>
+      <Container style={container}>
+        {/* Header with gradient background */}
+        <Section style={header}>
+          <Img
+            src="https://gcdnb.pbrd.co/images/OPvWenHrwOqh.png?o=1"
+            alt="Stocker"
+            style={logo}
+          />
+        </Section>
+
+        {/* Main content card */}
+        <Section style={card}>
+          <Heading style={h1}>Verify Your Email</Heading>
+          <Text style={heroText}>
+            Hi there! Please use the following verification code to confirm your email address:
+          </Text>
+
+          {/* OTP Code with modern design */}
+          <Section style={codeBox}>
+            <Text style={confirmationCodeText}>{otp}</Text>
+          </Section>
+
+          <Text style={text}>
+            This code will expire in 10 minutes. If you didn't request this email, please ignore it.
+          </Text>
+
+          {/* Decorative divider */}
+          <Section style={divider}></Section>
+
+          {/* Footer with social links */}
+          <Section>
+            <Text style={footerText}>Follow us on</Text>
+            <Row style={socialLinks}>
+              <Column style={socialColumn}>
+                <Link href="https://twitter.com" style={socialLink}>
+                  <Img
+                    src={`https://iconape.com/wp-content/png_logo_vector/twitter-icon-square-logo.png`}
+                    width="24"
+                    height="24"
+                    alt="Twitter"
+                    style={socialIcon}
+                  />
+                  <span style={socialText}>Twitter</span>
+                </Link>
+              </Column>
+              <Column style={socialColumn}>
+                <Link href="https://facebook.com" style={socialLink}>
+                  <Img
+                    src={`https://upload.wikimedia.org/wikipedia/commons/c/cd/Facebook_logo_%28square%29.png`}
+                    width="24"
+                    height="24"
+                    alt="Facebook"
+                    style={socialIcon}
+                  />
+                  <span style={socialText}>Facebook</span>
+                </Link>
+              </Column>
+              <Column style={socialColumn}>
+                <Link href="https://linkedin.com" style={socialLink}>
+                  <Img
+                    src={`https://img.freepik.com/premium-vector/blue-white-linkedin-icon-blue-background_462839-1656.jpg`}
+                    width="24"
+                    height="24"
+                    alt="LinkedIn"
+                    style={socialIcon}
+                  />
+                  <span style={socialText}>LinkedIn</span>
+                </Link>
+              </Column>
+            </Row>
+          </Section>
+        </Section>
+
+        {/* Footer links */}
+        <Section style={footer}>
+          <Link
+            style={footerLink}
+            href="https://Stockerhq.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Our blog
+          </Link>
+          &nbsp;&nbsp;•&nbsp;&nbsp;
+          <Link
+            style={footerLink}
+            href="https://Stocker.com/legal"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Policies
+          </Link>
+          &nbsp;&nbsp;•&nbsp;&nbsp;
+          <Link
+            style={footerLink}
+            href="https://Stocker.com/help"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Help center
+          </Link>
+          <Text style={copyright}>
+            ©{new Date().getFullYear()} Stocker Technologies<br />
+            All rights reserved.
+          </Text>
+        </Section>
+      </Container>
+    </Body>
+  </Html>
+);
+
+// Styles
 const main = {
-  backgroundColor: "#f8fafc", // slate-50
-  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Ubuntu,sans-serif',
-  margin: "0",
-  padding: "20px 0",
-  lineHeight: "1.5",
-}
+  backgroundColor: '#f6f9fc',
+  fontFamily:
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif",
+  padding: '20px 0',
+};
 
 const container = {
-  backgroundColor: "#ffffff", // white
-  margin: "0 auto",
-  maxWidth: "600px",
-  borderRadius: "16px",
-  overflow: "hidden",
-  boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)", // shadow-2xl
-}
+  maxWidth: '600px',
+  margin: '0 auto',
+};
 
-const headerSection = {
-  background: "#2860e8", // blue-600 to indigo-700
-  padding: "40px 20px",
-  textAlign: "center" as const,
-}
+const header = {
+  background: '#2d5fe6',
+  padding: '40px 20px',
+  textAlign: 'center' as const,
+  borderRadius: '8px 8px 0 0',
+};
 
-const logoContainer = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  marginBottom: "16px",
-}
+const logo = {
+  height: '70px',
+  margin: '0 auto',
+  width:"240px"
 
-const logoImg = {
-  width: "32px",
-  height: "32px",
-  borderRadius: "9999px", // rounded-full
-  backgroundColor: "#ffffff", // white
-  padding: "4px",
-  marginRight: "8px",
-}
+};
 
-const appName = {
-  color: "#ffffff", // white
-  fontSize: "28px",
-  fontWeight: "bold",
-  margin: "0",
-}
+const card = {
+  backgroundColor: '#ffffff',
+  padding: '30px',
+  borderRadius: '0 0 8px 8px',
+  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+};
 
-const tagline = {
-  color: "#e2e8f0", // slate-200
-  fontSize: "16px",
-  margin: "0",
-  fontWeight: "500",
-}
+const h1 = {
+  color: '#2e61e7',
+  fontSize: '28px',
+  fontWeight: '700',
+  margin: '0 0 20px',
+  textAlign: 'center' as const,
+};
 
-const content = {
-  padding: "40px 40px",
-}
+const heroText = {
+  fontSize: '16px',
+  lineHeight: '24px',
+  color: '#525f7f',
+  margin: '0 0 30px',
+  textAlign: 'center' as const,
+};
 
-const welcomeSection = {
-  textAlign: "center" as const,
-  marginBottom: "40px",
-}
+const codeBox = {
+  background: 'linear-gradient(to right, #f6f9fc, #ffffff)',
+  borderRadius: '8px',
+  margin: '0 auto 30px',
+  padding: '20px',
+  textAlign: 'center' as const,
+  border: '1px solid #e0e6ed',
+};
 
-const heading = {
-  fontSize: "36px",
-  fontWeight: "bold",
-  color: "#1e293b", // slate-900
-  margin: "0 0 16px 0",
-  textAlign: "center" as const,
-}
+const confirmationCodeText = {
+  fontSize: '32px',
+  fontWeight: '700',
+  color: '#2e61e7',
+  letterSpacing: '4px',
+  margin: '0',
+};
 
-const paragraph = {
-  fontSize: "16px",
-  lineHeight: "26px",
-  color: "#475569", // slate-600
-  margin: "0",
-  textAlign: "center" as const,
-}
+const text = {
+  color: '#525f7f',
+  fontSize: '14px',
+  lineHeight: '22px',
+  textAlign: 'center' as const,
+  margin: '0 0 30px',
+};
 
-const otpSection = {
-  margin: "40px 0",
-}
+const divider = {
+  height: '1px',
+  backgroundColor: '#e0e6ed',
+  margin: '30px 0',
+};
 
-const otpLabel = {
-  fontSize: "16px",
-  color: "#374151", // gray-700
-  textAlign: "center" as const,
-  margin: "0 0 20px 0",
-  fontWeight: "600",
-}
+const socialLinks = {
+  margin: '0 auto 30px',
+  width: '100%',
+};
 
-const otpContainer = {
-  background: "#2860e8", // blue-600 to indigo-700
-  borderRadius: "16px",
-  padding: "32px",
-  textAlign: "center" as const,
-  margin: "0 auto 24px auto",
-  maxWidth: "300px",
-  boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)", // shadow-md
-}
+const socialColumn = {
+  width: '33%',
+  display: 'inline-block',
+  verticalAlign: 'top',
+};
 
-const otpText = {
-  fontSize: "42px",
-  fontWeight: "bold",
-  color: "#ffffff", // white
-  letterSpacing: "12px",
-  margin: "0",
-  fontFamily: "Monaco, 'Cascadia Code', 'Roboto Mono', monospace",
-  textShadow: "0 2px 4px rgba(0,0,0,0.1)",
-}
+const socialLink = {
+  display: 'block',
+  textAlign: 'center' as const,
+  textDecoration: 'none',
+  color: '#525f7f',
+};
 
-const otpInfo = {
-  display: "flex",
-  justifyContent: "space-around",
-  flexWrap: "wrap" as const,
-  gap: "16px",
-}
+const socialIcon = {
+  display: 'block',
+  margin: '0 auto 8px',
+};
 
-const infoText = {
-  fontSize: "14px",
-  color: "#6b7280", // gray-500
-  margin: "0",
-  textAlign: "center" as const,
-}
-
-const securityNotice = {
-  backgroundColor: "#fef3c7", // yellow-100
-  border: "1px solid #f59e0b", // orange-500
-  borderRadius: "12px",
-  padding: "24px",
-  margin: "32px 0",
-}
-
-const securityTitle = {
-  fontSize: "16px",
-  fontWeight: "bold",
-  color: "#92400e", // orange-800
-  margin: "0 0 12px 0",
-}
-
-const securityText = {
-  fontSize: "14px",
-  color: "#92400e", // orange-800
-  lineHeight: "22px",
-  margin: "0",
-}
-
-const hr = {
-  borderColor: "#e5e7eb", // gray-200
-  margin: "40px 0",
-}
+const socialText = {
+  fontSize: '12px',
+};
 
 const footer = {
-  textAlign: "center" as const,
-}
+  textAlign: 'center' as const,
+  padding: '20px 0',
+};
+
+const footerLink = {
+  color: '#8898aa',
+  fontSize: '12px',
+  textDecoration: 'none',
+};
 
 const footerText = {
-  fontSize: "14px",
-  color: "#374151", // gray-700
-  margin: "0 0 12px 0",
-}
+  color: '#8898aa',
+  fontSize: '12px',
+  margin: '0 0 10px',
+};
 
-const footerSmall = {
-  fontSize: "12px",
-  color: "#9ca3af", // gray-400
-  margin: "8px 0",
-}
+const copyright = {
+  color: '#8898aa',
+  fontSize: '12px',
+  lineHeight: '18px',
+  margin: '20px 0 0',
+};
 
-export function OTPEmail({ otp, email }: OTPEmailProps) {
-  return (
-    <Html>
-      <Head />
-      <Body style={main}>
-        <Container style={container}>
-          {/* Header with gradient */}
-          <Section style={headerSection}>
-            <div style={logoContainer}>
-              <Img src="/placeholder.svg?height=32&width=32" alt="StockFlow Logo" style={logoImg} />
-              <Text style={appName}>StockFlow</Text>
-            </div>
-            <Text style={tagline}>Your Inventory Management Solution</Text>
-          </Section>
 
-          <Section style={content}>
-            {/* Welcome section */}
-            <div style={welcomeSection}>
-              <Heading style={heading}>Secure Access Code</Heading>
-              <Text style={paragraph}>
-                Hello! We've received a sign-in request for your StockFlow account. Your security is our priority, so
-                we've generated a unique verification code for you.
-              </Text>
-            </div>
 
-            {/* OTP Display */}
-            <div style={otpSection}>
-              <Text style={otpLabel}>Your 6-digit verification code:</Text>
-              <div style={otpContainer}>
-                <Text style={otpText}>{otp}</Text>
-              </div>
-              <div style={otpInfo}>
-                <Text style={infoText}>
-                  ⏱️ <strong>Expires in 10 minutes</strong>
-                </Text>
-                <Text style={infoText}>
-                  🔒 <strong>Keep this code secure</strong>
-                </Text>
-              </div>
-            </div>
-
-            {/* Security Notice */}
-            <div style={securityNotice}>
-              <Text style={securityTitle}>🛡️ Security Notice</Text>
-              <Text style={securityText}>
-                If you didn't request this code, please ignore this email. Your account remains secure. Never share this
-                code with anyone - our team will never ask for it.
-              </Text>
-            </div>
-
-            <Hr style={hr} />
-
-            {/* Footer */}
-            <div style={footer}>
-              <Text style={footerText}>
-                This email was sent to <strong>{email}</strong>
-              </Text>
-              <Text style={footerSmall}>Need help? Contact our support team at support@stockflow.com</Text>
-              <Text style={footerSmall}>© 2025 StockFlow. All rights reserved.</Text>
-            </div>
-          </Section>
-        </Container>
-      </Body>
-    </Html>
-  )
-}

@@ -247,7 +247,7 @@ export default function Home() {
               asChild
               className="bg-slate-800 text-white hover:bg-slate-700 rounded-full px-6 py-3 md:px-8 md:py-3 text-base md:text-lg font-semibold"
             >
-              <Link href="/auth">Dive in</Link>
+              <Link href="/auth">Dive In</Link>
             </Button>
             <Button
               asChild
@@ -296,7 +296,7 @@ export default function Home() {
                 </FeatureIconWrapper>
                 <h3 className="text-lg md:text-xl font-bold mt-4 md:mt-6 text-gray-900">Inventory Dashboard</h3>
                 <p className="text-gray-600 mt-2 md:mt-3 text-sm leading-relaxed">
-                  Get a comprehensive overview of your stock levels, product performance, and key inventory metrics at a
+                  Get a comprehensive overview of your product listings, product performance, and key inventory metrics at a
                   glance.
                 </p>
               </Card>
