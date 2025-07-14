@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { GlobalLoadingProvider } from '@/components/loader'
+// import { PreloaderProvider } from '@/components/loader'
 import { Toaster } from '@/components/ui/toaster'
 
 export const metadata: Metadata = {
@@ -77,10 +77,10 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
       </head>
       <body className="antialiased">
-        <GlobalLoadingProvider>
+        {/* <PreloaderProvider> */}
           {children}
           <Toaster />
-        </GlobalLoadingProvider>
+        {/* </PreloaderProvider> */}
       </body>
     </html>
   )

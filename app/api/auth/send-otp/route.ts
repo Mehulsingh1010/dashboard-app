@@ -12,14 +12,14 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Email is required" }, { status: 400 })
     }
 
-    // Generate 6-digit OTP
+    //to generate the 6 digit otp
     const otp = Math.floor(100000 + Math.random() * 900000).toString()
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000) // 10 minutes
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000) // setting timing
 
-    // Connect to database
+    //mongoo connection
     const { db } = await connectToDatabase()
 
-    // Store OTP in database
+    //stored otp db
     await db.collection("otps").updateOne(
       { email },
       {
@@ -33,21 +33,21 @@ export async function POST(request: NextRequest) {
       { upsert: true },
     )
 
-    // Create transporter
+    //the smtp transporter
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
       secure: false,
       auth: {
-        user: "singhmehul072@gmail.com",
-        pass: "ghfp pqen mejx qlan",
+        user: process.env.EMAIL_USER ,
+        pass: process.env.EMAIL_PASSWORD ,
       },
     })
 
-    // Render email HTML - await the render function
+    //the render function to render the email
     const emailHtml = await render(OTPEmail({ otp, email }))
 
-    // Send email
+    //send the email
     await transporter.sendMail({
       from: '"Dashboard App" <singhmehul072@gmail.com>',
       to: email,

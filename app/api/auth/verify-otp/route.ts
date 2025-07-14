@@ -12,27 +12,27 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: "Email and OTP are required" }, { status: 400 })
     }
 
-    // Connect to database
+    //database
     const { db } = await connectToDatabase()
 
-    // Find OTP record
+    //finding otp in db
     const otpRecord = await db.collection("otps").findOne({ email })
 
     if (!otpRecord) {
       return NextResponse.json({ message: "OTP not found" }, { status: 400 })
     }
 
-    // Check if OTP is expired
+    //if more than 10 minutes then otp is expired
     if (new Date() > otpRecord.expiresAt) {
       return NextResponse.json({ message: "OTP has expired" }, { status: 400 })
     }
 
-    // Verify OTP
+    //verify otp
     if (otpRecord.otp !== otp) {
       return NextResponse.json({ message: "Invalid OTP" }, { status: 400 })
     }
 
-    // Create or update user
+    //createor update user in db
     await db.collection("users").updateOne(
       { email },
       {
@@ -45,13 +45,13 @@ export async function POST(request: NextRequest) {
       { upsert: true },
     )
 
-    // Delete used OTP
+    //del otp from db
     await db.collection("otps").deleteOne({ email })
 
-    // Generate simple token (in production, use JWT)
+    //like jwt token generation
     const token = Buffer.from(`${email}:${Date.now()}`).toString("base64")
 
-    // Send welcome email
+    //2nd mail for welcome
     try {
       const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
         },
       })
 
-      // Await the render function
+      //render welcome email
       const emailHtml = await render(WelcomeEmail({ email }))
 
       await transporter.sendMail({
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
       })
     } catch (emailError) {
       console.error("Welcome email error:", emailError)
-      // Don't fail the verification if email fails
+      //fallback to just returning the token(was causing issues with email sending)
     }
 
     return NextResponse.json(

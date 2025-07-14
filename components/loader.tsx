@@ -1,30 +1,11 @@
 "use client"
 
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { Loader2, Package } from 'lucide-react'
+import React, { useState, ReactNode, useEffect } from 'react'
+import { Loader2 } from 'lucide-react'
 import Image from 'next/image'
 
-interface GlobalLoadingContextType {
-  isLoading: boolean
-  setIsLoading: (loading: boolean) => void
-  showPageLoader: () => void
-  hidePageLoader: () => void
-  isPageLoading: boolean
-}
-
-const GlobalLoadingContext = createContext<GlobalLoadingContextType | undefined>(undefined)
-
-export const useGlobalLoading = () => {
-  const context = useContext(GlobalLoadingContext)
-  if (!context) {
-    throw new Error('useGlobalLoading must be used within a GlobalLoadingProvider')
-  }
-  return context
-}
-
-// Enhanced Loading Screen Component
-const LoadingScreen = ({ isPageLoading }: { isPageLoading: boolean }) => {
+// Preloader Screen Component
+const PreloaderScreen = () => {
   const [dots, setDots] = useState('')
   
   useEffect(() => {
@@ -54,7 +35,7 @@ const LoadingScreen = ({ isPageLoading }: { isPageLoading: boolean }) => {
         {/* Logo with Animation */}
         <div className="relative">
           <div className="absolute inset-0 bg-white/20 rounded-2xl blur-xl animate-pulse"></div>
-          <div className="relative rounded-2xlborder border-white/20">
+          <div className="relative rounded-2xl border border-white/20">
             <Image src="logo.png" alt='logo' height={60} width={60}/>
           </div>
         </div>
@@ -63,7 +44,7 @@ const LoadingScreen = ({ isPageLoading }: { isPageLoading: boolean }) => {
         <div className="text-center">
           <h1 className="text-4xl font-bold text-white mb-2">Stocker</h1>
           <p className="text-blue-100 text-lg">
-            {isPageLoading ? 'Loading page' : 'Loading'}
+            Loading
             <span className="inline-block w-8 text-left">{dots}</span>
           </p>
         </div>
@@ -86,7 +67,7 @@ const LoadingScreen = ({ isPageLoading }: { isPageLoading: boolean }) => {
         {/* Loading Text */}
         <div className="text-center text-white/80">
           <p className="text-sm">
-            {isPageLoading ? 'Setting up your experience...' : 'Please wait while we process your request...'}
+            Setting up your experience...
           </p>
         </div>
       </div>
@@ -94,66 +75,30 @@ const LoadingScreen = ({ isPageLoading }: { isPageLoading: boolean }) => {
   )
 }
 
-// Mini Loading Overlay for Components
-const MiniLoadingOverlay = () => (
-  <div className="fixed inset-0 z-40 bg-black/20 backdrop-blur-sm flex items-center justify-center">
-    <div className="bg-white rounded-lg p-6 shadow-xl border flex items-center space-x-3">
-      <Loader2 className="h-6 w-6 text-blue-600 animate-spin" />
-      <span className="text-gray-700 font-medium">Loading...</span>
-    </div>
-  </div>
-)
+// Preloader Provider Component
+export const PreloaderProvider = ({ 
+  children,
+  duration = 2000 // Default 2 seconds
+}: { 
+  children: ReactNode
+  duration?: number
+}) => {
+  const [isLoading, setIsLoading] = useState(true)
 
-export const GlobalLoadingProvider = ({ children }: { children: ReactNode }) => {
-  const [isLoading, setIsLoading] = useState(false)
-  const [isPageLoading, setIsPageLoading] = useState(false)
-  const [isInitialLoad, setIsInitialLoad] = useState(true)
-  const router = useRouter()
-
-  // Handle initial page load
   useEffect(() => {
-    const handleStart = () => setIsPageLoading(true)
-    const handleComplete = () => {
-      setIsPageLoading(false)
-      setIsInitialLoad(false)
-    }
-
-    // Simulate initial load
     const timer = setTimeout(() => {
-      setIsInitialLoad(false)
-    }, 1500)
+      setIsLoading(false)
+    }, duration)
 
     return () => clearTimeout(timer)
-  }, [])
+  }, [duration])
 
-  // Auto-hide page loader after navigation
-  useEffect(() => {
-    if (isPageLoading) {
-      const timer = setTimeout(() => {
-        setIsPageLoading(false)
-      }, 2000)
-      return () => clearTimeout(timer)
-    }
-  }, [isPageLoading])
-
-  const showPageLoader = () => setIsPageLoading(true)
-  const hidePageLoader = () => setIsPageLoading(false)
-
-  const value: GlobalLoadingContextType = {
-    isLoading,
-    setIsLoading,
-    showPageLoader,
-    hidePageLoader,
-    isPageLoading,
+  if (isLoading) {
+    return <PreloaderScreen />
   }
 
-  return (
-    <GlobalLoadingContext.Provider value={value}>
-      {(isInitialLoad || isPageLoading) && <LoadingScreen isPageLoading={isPageLoading} />}
-      {isLoading && !isPageLoading && <MiniLoadingOverlay />}
-      <div className={isInitialLoad || isPageLoading ? 'hidden' : 'block'}>
-        {children}
-      </div>
-    </GlobalLoadingContext.Provider>
-  )
+  return <>{children}</>
 }
+
+
+export default PreloaderProvider

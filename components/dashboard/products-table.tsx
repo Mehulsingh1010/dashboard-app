@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button"
 import { Star, Search, ChevronLeft, ChevronRight, RefreshCw } from "lucide-react"
 import Image from "next/image"
 
-// Updated Product interface to match your JSON structure
 interface Product {
   id: number
   title: string

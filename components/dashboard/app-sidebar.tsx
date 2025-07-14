@@ -1,6 +1,6 @@
 "use client"
 
-import { Building2, Home, Package, BarChart3, Bell, Settings, LogOut, Plus, ChevronRight } from "lucide-react"
+import { Home, Package, BarChart3, Bell, Settings, LogOut, Plus, ChevronRight } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -26,37 +26,36 @@ import {
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 import { useState, useEffect } from "react"
+import { usePathname } from "next/navigation"
 
 interface AppSidebarProps {
-  activeTab: string
-  setActiveTab: (tab: string) => void
   userEmail: string
   onLogout: () => void
+  onNavigate: (tab: string) => void
   notificationCount?: number
-  onSidebarClose?: () => void // Add this prop for mobile sidebar control
+  onSidebarClose?: () => void
 }
 
-export function AppSidebar({ 
-  activeTab, 
-  setActiveTab, 
-  userEmail, 
-  onLogout, 
+export function AppSidebar({
+  userEmail,
+  onLogout,
+  onNavigate,
   notificationCount = 0,
-  onSidebarClose 
+  onSidebarClose,
 }: AppSidebarProps) {
   const [isMobile, setIsMobile] = useState(false)
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
+  const pathname = usePathname()
 
-  // Check if device is mobile
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768) // md breakpoint
+      setIsMobile(window.innerWidth < 768)
     }
-    
+
     checkMobile()
-    window.addEventListener('resize', checkMobile)
-    
-    return () => window.removeEventListener('resize', checkMobile)
+    window.addEventListener("resize", checkMobile)
+
+    return () => window.removeEventListener("resize", checkMobile)
   }, [])
 
   const menuItems = [
@@ -64,16 +63,19 @@ export function AppSidebar({
       id: "dashboard",
       label: "Dashboard",
       icon: Home,
+      path: "/dashboard",
     },
     {
       id: "products",
       label: "Products",
       icon: Package,
+      path: "/dashboard/products",
     },
     {
       id: "analytics",
       label: "Analytics",
       icon: BarChart3,
+      path: "/dashboard/analyze",
     },
   ]
 
@@ -82,27 +84,24 @@ export function AppSidebar({
   }
 
   const handleMenuItemClick = (tabId: string) => {
-    setActiveTab(tabId)
-    
-    // Close sidebar on mobile when navigating to another page
+    onNavigate(tabId)
+
     if (isMobile && onSidebarClose) {
       onSidebarClose()
     }
   }
 
   const handleAddProductClick = () => {
-    setActiveTab("products")
-    
-    // Close sidebar on mobile when navigating to products
+    onNavigate("products")
+
     if (isMobile && onSidebarClose) {
       onSidebarClose()
     }
   }
 
   const handleSettingsClick = () => {
-    setActiveTab("settings")
-    
-    // Close sidebar on mobile when navigating to settings
+    onNavigate("settings")
+
     if (isMobile && onSidebarClose) {
       onSidebarClose()
     }
@@ -113,23 +112,30 @@ export function AppSidebar({
     onLogout()
   }
 
+  const getActiveTab = () => {
+    if (pathname === "/dashboard") return "dashboard"
+    if (pathname === "/dashboard/products") return "products"
+    if (pathname === "/dashboard/analyze") return "analytics"
+    return "dashboard"
+  }
+
+  const activeTab = getActiveTab()
+
   return (
-    <Sidebar 
-      variant="floating" 
+    <Sidebar
+      variant="floating"
       className="border-r-0 bg-white/95 backdrop-blur-sm shadow-lg rounded-xl m-4 h-[calc(100vh-2rem)] flex flex-col"
     >
       <SidebarHeader className="p-6 pb-4 flex-shrink-0">
-        {/* Logo and Brand */}
         <div className="flex items-center gap-3 mb-8">
-          <div className="flex h-10 w-10 items-center justify-center ">
-            <Image src="/logo.png" alt="stocker" height={50} width={50}/>
+          <div className="flex h-10 w-10 items-center justify-center">
+            <Image src="/logo.png" alt="stocker" height={50} width={50} />
           </div>
           <div>
             <h2 className="text-lg font-semibold text-gray-900 tracking-tight">Stocker</h2>
             <p className="text-xs text-gray-500 font-medium">Inventory System</p>
           </div>
         </div>
-        {/* User Profile Card */}
         <div className="rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 text-white shadow-lg">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 text-white font-medium shadow-inner">
@@ -142,9 +148,8 @@ export function AppSidebar({
           </div>
         </div>
       </SidebarHeader>
-      
+
       <SidebarContent className="px-4 flex-1 overflow-y-auto">
-        {/* Quick Action Button */}
         <div className="mb-4 px-2">
           <Button
             onClick={handleAddProductClick}
@@ -190,10 +195,9 @@ export function AppSidebar({
           })}
         </SidebarMenu>
       </SidebarContent>
-      
+
       <SidebarFooter className="p-4 pt-2 flex-shrink-0">
         <SidebarSeparator className="my-4 bg-gray-200" />
-        {/* Footer Actions */}
         <div className="flex items-center justify-between mb-4">
           <Button
             variant="ghost"
@@ -215,8 +219,7 @@ export function AppSidebar({
           >
             <Settings className="h-4 w-4" />
           </Button>
-          
-          {/* Logout Button with Confirmation Dialog */}
+
           <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
             <AlertDialogTrigger asChild>
               <Button
@@ -228,7 +231,7 @@ export function AppSidebar({
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent className="bg-blue-600 text-white">
-              <AlertDialogHeader >
+              <AlertDialogHeader>
                 <AlertDialogTitle>Confirm Logout</AlertDialogTitle>
                 <AlertDialogDescription className="text-white">
                   Are you sure you want to logout? You will need to sign in again to access your account.
@@ -236,17 +239,13 @@ export function AppSidebar({
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel className="text-black">Cancel</AlertDialogCancel>
-                <AlertDialogAction 
-                  onClick={handleLogout}
-                  className="bg-red-600 hover:bg-red-700"
-                >
+                <AlertDialogAction onClick={handleLogout} className="bg-red-600 hover:bg-red-700">
                   Logout
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
         </div>
-        {/* Copyright */}
         <div className="text-center">
           <p className="text-xs text-gray-400 mb-1">© {new Date().getFullYear()} Inventory System</p>
         </div>

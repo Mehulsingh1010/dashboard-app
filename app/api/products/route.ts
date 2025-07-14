@@ -5,7 +5,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const limit = searchParams.get("limit") || "30" 
     const skip = searchParams.get("skip") || "0"
-
+    //fetching products from dummyjson and putting limit and skip
     const dummyJsonUrl = `https://dummyjson.com/products?limit=${limit}&skip=${skip}`
     const response = await fetch(dummyJsonUrl)
 

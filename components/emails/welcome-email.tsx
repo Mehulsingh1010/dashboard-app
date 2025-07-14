@@ -15,15 +15,17 @@ import {
 } from '@react-email/components';
 
 interface WelcomeEmailProps {
-  userEmail: string;
+  userEmail?: string;
   userName?: string;
+  email?: string;
+  
 }
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : '';
 
-export const WelcomeEmail = ({ userEmail, userName }: WelcomeEmailProps) => (
+export const WelcomeEmail = ({ userEmail, userName,email }: WelcomeEmailProps) => (
   <Html>
     <Head />
     <Preview>Welcome to Stocker - Your Stock Management Platform</Preview>

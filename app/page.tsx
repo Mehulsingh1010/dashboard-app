@@ -1,11 +1,17 @@
-import LandingPage from '@/components/dashboard/landing'
+
+import Landing from '@/components/dashboard/landing'
+import PreloaderProvider from '@/components/loader'
 import React from 'react'
-import Home from '@/components/New'
+
 const page = () => {
   return (
     <div>
-     <Home/>
-     {/* <LandingPage /> */}
+      <PreloaderProvider>
+
+      <Landing/>
+
+      </PreloaderProvider>
+   
     
       
     </div>
