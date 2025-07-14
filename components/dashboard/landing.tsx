@@ -73,6 +73,8 @@ function Navbar() {
   return (
     <nav className="flex items-center justify-between p-4 md:p-6 max-w-7xl mx-auto relative z-30 font-poppins">
       <div className="flex items-center space-x-2">
+        <Link href="/">
+
         <Image
           src="/logo.png"
           alt="StockFlow Logo"
@@ -80,6 +82,8 @@ function Navbar() {
           height={34}
           className=" "
         />
+         </Link>
+        
         <span className="text-white text-lg md:text-xl font-bold">Stocker</span>
       </div>
       <div className="hidden md:flex space-x-6 lg:space-x-8">

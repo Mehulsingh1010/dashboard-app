@@ -152,10 +152,13 @@ export default function VerifyOTPPage() {
         <div className="absolute bottom-32 left-16 w-20 h-20 bg-blue-400/20 rounded-full blur-xl animate-pulse delay-2000"></div>
         <div className="relative z-10 h-full flex flex-col justify-center">
           {/* Logo/Brand */}
+          <Link href="/">
           <div className="flex items-center mb-6">
             <Image src="/logo.png" alt="Stocker Logo" width={34} height={34} className="" />
             <span className="ml-4 text-3xl font-bold text-white">Stocker</span>
           </div>
+          </Link>
+          
           {/* Main Heading */}
           <div className="mb-4">
             <h1 className="text-5xl font-extrabold text-white mb-4 leading-tight">

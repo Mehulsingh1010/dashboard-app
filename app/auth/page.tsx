@@ -102,11 +102,14 @@ export default function LoginPage() {
           </Link>
         </div>
         <div className="relative z-10 h-full flex flex-col justify-center">
-          {/* Logo/Brand */}
+          {/* Logo/Brand */}<Link href="/">
           <div className="flex items-center mb-8">
+            
             <Image src="/logo.png" alt="Stocker Logo" width={34} height={34} className="" />
+            
+           
             <span className="ml-4 text-3xl font-bold text-white">Stocker</span>
-          </div>
+          </div> </Link>
           {/* Main Heading */}
           <div className="mb-6">
             <h1 className="text-5xl font-extrabold text-white mb-4 leading-tight">

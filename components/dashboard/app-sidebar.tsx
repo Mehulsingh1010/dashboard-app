@@ -1,6 +1,15 @@
-"use client"
+"use client";
 
-import { Home, Package, BarChart3, Bell, Settings, LogOut, Plus, ChevronRight } from "lucide-react"
+import {
+  Home,
+  Package,
+  BarChart3,
+  Bell,
+  Settings,
+  LogOut,
+  Plus,
+  ChevronRight,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -11,8 +20,8 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
   useSidebar,
-} from "@/components/ui/sidebar"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/sidebar";
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,18 +32,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
-import { cn } from "@/lib/utils"
-import Image from "next/image"
-import { useState, useEffect } from "react"
-import { usePathname } from "next/navigation"
+} from "@/components/ui/alert-dialog";
+import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { useState, useEffect } from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 interface AppSidebarProps {
-  userEmail: string
-  onLogout: () => void
-  onNavigate: (tab: string) => void
-  notificationCount?: number
-  onSidebarClose?: () => void
+  userEmail: string;
+  onLogout: () => void;
+  onNavigate: (tab: string) => void;
+  notificationCount?: number;
+  onSidebarClose?: () => void;
 }
 
 export function AppSidebar({
@@ -44,21 +54,21 @@ export function AppSidebar({
   notificationCount = 0,
   onSidebarClose,
 }: AppSidebarProps) {
-  const [isMobile, setIsMobile] = useState(false)
-  const [showLogoutDialog, setShowLogoutDialog] = useState(false)
-  const pathname = usePathname()
-  const { setOpenMobile } = useSidebar()
+  const [isMobile, setIsMobile] = useState(false);
+  const [showLogoutDialog, setShowLogoutDialog] = useState(false);
+  const pathname = usePathname();
+  const { setOpenMobile } = useSidebar();
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
-    }
+      setIsMobile(window.innerWidth < 768);
+    };
 
-    checkMobile()
-    window.addEventListener("resize", checkMobile)
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
 
-    return () => window.removeEventListener("resize", checkMobile)
-  }, [])
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const menuItems = [
     {
@@ -79,85 +89,92 @@ export function AppSidebar({
       icon: BarChart3,
       path: "/dashboard/analyze",
     },
-  ]
+  ];
 
   const getUserName = () => {
-    return userEmail.split("@")[0].charAt(0).toUpperCase() + userEmail.split("@")[0].slice(1)
-  }
+    return (
+      userEmail.split("@")[0].charAt(0).toUpperCase() +
+      userEmail.split("@")[0].slice(1)
+    );
+  };
 
   const closeMobileNav = () => {
     if (isMobile) {
       // Close sidebar using the useSidebar hook
-      setOpenMobile(false)
-      
+      setOpenMobile(false);
+
       // Also call the optional onSidebarClose callback if provided
       if (onSidebarClose) {
-        onSidebarClose()
+        onSidebarClose();
       }
     }
-  }
+  };
 
   const handleMenuItemClick = (tabId: string) => {
-    onNavigate(tabId)
-    
+    onNavigate(tabId);
+
     // Close mobile navigation after a short delay to allow navigation to start
     setTimeout(() => {
-      closeMobileNav()
-    }, 100)
-  }
+      closeMobileNav();
+    }, 100);
+  };
 
   const handleAddProductClick = () => {
-    onNavigate("products")
-    
+    onNavigate("products");
+
     // Close mobile navigation after a short delay
     setTimeout(() => {
-      closeMobileNav()
-    }, 100)
-  }
+      closeMobileNav();
+    }, 100);
+  };
 
   const handleSettingsClick = () => {
-    onNavigate("settings")
-    
+    onNavigate("settings");
+
     // Close mobile navigation after a short delay
     setTimeout(() => {
-      closeMobileNav()
-    }, 100)
-  }
+      closeMobileNav();
+    }, 100);
+  };
 
   const handleLogout = () => {
-    setShowLogoutDialog(false)
-    onLogout()
-    
+    setShowLogoutDialog(false);
+    onLogout();
+
     // Close mobile navigation
-    closeMobileNav()
-  }
+    closeMobileNav();
+  };
 
   const getActiveTab = () => {
-    if (pathname === "/dashboard") return "dashboard"
-    if (pathname === "/dashboard/products") return "products"
-    if (pathname === "/dashboard/analyze") return "analytics"
-    return "dashboard"
-  }
+    if (pathname === "/dashboard") return "dashboard";
+    if (pathname === "/dashboard/products") return "products";
+    if (pathname === "/dashboard/analyze") return "analytics";
+    return "dashboard";
+  };
 
-  const activeTab = getActiveTab()
+  const activeTab = getActiveTab();
 
   return (
-
-    
     <Sidebar
       variant="floating"
       className="border-r-0  backdrop-blur-sm shadow-lg rounded-xl m-4 h-[calc(100vh-2rem)] flex flex-col"
     >
-      <SidebarHeader className="p-6 bg-gray-100 pb-4 flex-shrink-0">
+      <SidebarHeader className="p-6 bg-gray-100 pb-4 flex-shrink-0"><Link href="/">
         <div className="flex items-center gap-3 mb-8">
-          <div className="flex h-10 w-10 items-center justify-center">
-            <Image src="/logo.png" alt="stocker" height={50} width={50} />
-          </div>
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900 tracking-tight">Stocker</h2>
-            <p className="text-xs text-gray-500 font-medium">Inventory System</p>
-          </div>
-        </div>
+          
+            <div className="flex h-10 w-10 items-center justify-center">
+              <Image src="/logo.png" alt="stocker" height={50} width={50} />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-gray-900 tracking-tight">
+                Stocker
+              </h2>
+              <p className="text-xs text-gray-500 font-medium">
+                Inventory System
+              </p>
+            </div>
+         
+        </div> </Link>
         <div className="rounded-xl bg-gradient-to-br from-blue-600 to-blue-700 p-4 text-white shadow-lg">
           <div className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/20 text-white font-medium shadow-inner">
@@ -187,7 +204,7 @@ export function AppSidebar({
         </div>
         <SidebarMenu>
           {menuItems.map((item) => {
-            const Icon = item.icon
+            const Icon = item.icon;
             return (
               <SidebarMenuItem key={item.id}>
                 <SidebarMenuButton
@@ -199,13 +216,15 @@ export function AppSidebar({
                     "data-[active=true]:bg-blue-50 data-[active=true]:text-blue-600",
                     "data-[active=true]:font-medium transition-colors duration-200",
                     activeTab === item.id &&
-                      "before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-2/3 before:w-1 before:bg-blue-600 before:rounded-r-full",
+                      "before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:h-2/3 before:w-1 before:bg-blue-600 before:rounded-r-full"
                   )}
                 >
                   <div
                     className={cn(
                       "p-1.5 rounded-lg",
-                      activeTab === item.id ? "bg-blue-100 text-blue-600" : "bg-gray-100 text-gray-600",
+                      activeTab === item.id
+                        ? "bg-blue-100 text-blue-600"
+                        : "bg-gray-100 text-gray-600"
                     )}
                   >
                     <Icon className="h-4 w-4" />
@@ -213,7 +232,7 @@ export function AppSidebar({
                   <span>{item.label}</span>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-            )
+            );
           })}
         </SidebarMenu>
       </SidebarContent>
@@ -242,7 +261,10 @@ export function AppSidebar({
             <Settings className="h-4 w-4" />
           </Button>
 
-          <AlertDialog open={showLogoutDialog} onOpenChange={setShowLogoutDialog}>
+          <AlertDialog
+            open={showLogoutDialog}
+            onOpenChange={setShowLogoutDialog}
+          >
             <AlertDialogTrigger asChild>
               <Button
                 variant="ghost"
@@ -256,12 +278,18 @@ export function AppSidebar({
               <AlertDialogHeader>
                 <AlertDialogTitle>Confirm Logout</AlertDialogTitle>
                 <AlertDialogDescription className="text-white">
-                  Are you sure you want to logout? You will need to sign in again to access your account.
+                  Are you sure you want to logout? You will need to sign in
+                  again to access your account.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel className="text-black">Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleLogout} className="bg-red-600 hover:bg-red-700">
+                <AlertDialogCancel className="text-black">
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleLogout}
+                  className="bg-red-600 hover:bg-red-700"
+                >
                   Logout
                 </AlertDialogAction>
               </AlertDialogFooter>
@@ -269,9 +297,11 @@ export function AppSidebar({
           </AlertDialog>
         </div>
         <div className="text-center">
-          <p className="text-xs text-gray-400 mb-1">© {new Date().getFullYear()} Inventory System</p>
+          <p className="text-xs text-gray-400 mb-1">
+            © {new Date().getFullYear()} Inventory System
+          </p>
         </div>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
