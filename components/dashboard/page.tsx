@@ -126,7 +126,7 @@ export function DashboardHome({ onNavigate, products }: DashboardHomeProps) {
   ]
 
   return (
-    <div className="min-h-screen rounded-lg bg-gray-50 p-6">
+    <div className="min-h-screen rounded-lg overflow-x-hidden bg-gray-50 p-6">
       <div className="max-w-7xl mx-auto">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">

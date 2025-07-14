@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, usePathname } from "next/navigation"
 import { AppSidebar } from "@/components/dashboard/app-sidebar"
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
@@ -12,6 +12,54 @@ import Image from "next/image"
 import { Suspense } from "react"
 import { DashboardContext, type DashboardContextType, type Product } from "./dashboard-context"
 
+// Spiral Loader Component
+const SpiralLoader = () => {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-sm">
+      <div className="relative">
+        {/* Spiral Animation */}
+        <div className="w-16 h-16 relative">
+          <div className="absolute inset-0 border-4 border-blue-200 rounded-full animate-spin"></div>
+          <div className="absolute inset-1 border-4 border-blue-400 rounded-full animate-spin animation-delay-150"></div>
+          <div className="absolute inset-2 border-4 border-blue-600 rounded-full animate-spin animation-delay-300"></div>
+          <div className="absolute inset-3 border-4 border-blue-800 rounded-full animate-spin animation-delay-450"></div>
+        </div>
+        
+        {/* Loading Text */}
+        <div className="mt-4 text-center">
+          <p className="text-gray-700 font-medium">Loading...</p>
+        </div>
+      </div>
+      
+      {/* CSS for animation delays */}
+      <style jsx>{`
+        .animation-delay-150 {
+          animation-delay: 150ms;
+        }
+        .animation-delay-300 {
+          animation-delay: 300ms;
+        }
+        .animation-delay-450 {
+          animation-delay: 450ms;
+        }
+        
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        
+        .animate-spin {
+          animation: spin 1s linear infinite;
+        }
+      `}</style>
+    </div>
+  )
+}
+
 export default function DashboardLayout({
   children,
 }: {
@@ -20,7 +68,41 @@ export default function DashboardLayout({
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [userEmail, setUserEmail] = useState("")
+  const [isNavigating, setIsNavigating] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
+
+  // Track route changes for navigation loading
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setIsNavigating(true)
+      // Hide loader after a short delay to ensure smooth transition
+      setTimeout(() => {
+        setIsNavigating(false)
+      }, 500)
+    }
+
+    // Listen for route changes
+    const originalPush = router.push
+    router.push = (...args) => {
+      handleRouteChange()
+      return originalPush.apply(router, args)
+    }
+
+    return () => {
+      router.push = originalPush
+    }
+  }, [router])
+
+  // Also track pathname changes
+  useEffect(() => {
+    setIsNavigating(true)
+    const timer = setTimeout(() => {
+      setIsNavigating(false)
+    }, 300)
+
+    return () => clearTimeout(timer)
+  }, [pathname])
 
   useEffect(() => {
     const token = localStorage.getItem("authToken")
@@ -82,6 +164,8 @@ export default function DashboardLayout({
   }
 
   const handleNavigate = (tab: string) => {
+    setIsNavigating(true)
+    
     switch (tab) {
       case "dashboard":
         router.push("/dashboard")
@@ -153,6 +237,9 @@ export default function DashboardLayout({
             <main className="flex-1 p-2 overflow-auto">{children}</main>
           </SidebarInset>
         </div>
+        
+        {/* Spiral Loader Overlay */}
+        {isNavigating && <SpiralLoader />}
       </SidebarProvider>
     </DashboardContext.Provider>
   )

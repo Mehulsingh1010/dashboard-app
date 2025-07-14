@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 import {
@@ -46,6 +47,7 @@ export function AppSidebar({
   const [isMobile, setIsMobile] = useState(false)
   const [showLogoutDialog, setShowLogoutDialog] = useState(false)
   const pathname = usePathname()
+  const { setOpenMobile } = useSidebar()
 
   useEffect(() => {
     const checkMobile = () => {
@@ -83,33 +85,51 @@ export function AppSidebar({
     return userEmail.split("@")[0].charAt(0).toUpperCase() + userEmail.split("@")[0].slice(1)
   }
 
+  const closeMobileNav = () => {
+    if (isMobile) {
+      // Close sidebar using the useSidebar hook
+      setOpenMobile(false)
+      
+      // Also call the optional onSidebarClose callback if provided
+      if (onSidebarClose) {
+        onSidebarClose()
+      }
+    }
+  }
+
   const handleMenuItemClick = (tabId: string) => {
     onNavigate(tabId)
-
-    if (isMobile && onSidebarClose) {
-      onSidebarClose()
-    }
+    
+    // Close mobile navigation after a short delay to allow navigation to start
+    setTimeout(() => {
+      closeMobileNav()
+    }, 100)
   }
 
   const handleAddProductClick = () => {
     onNavigate("products")
-
-    if (isMobile && onSidebarClose) {
-      onSidebarClose()
-    }
+    
+    // Close mobile navigation after a short delay
+    setTimeout(() => {
+      closeMobileNav()
+    }, 100)
   }
 
   const handleSettingsClick = () => {
     onNavigate("settings")
-
-    if (isMobile && onSidebarClose) {
-      onSidebarClose()
-    }
+    
+    // Close mobile navigation after a short delay
+    setTimeout(() => {
+      closeMobileNav()
+    }, 100)
   }
 
   const handleLogout = () => {
     setShowLogoutDialog(false)
     onLogout()
+    
+    // Close mobile navigation
+    closeMobileNav()
   }
 
   const getActiveTab = () => {
