@@ -64,14 +64,14 @@ export function ProductsTable({ products, onRefresh }: ProductsTableProps) {
   const [refreshing, setRefreshing] = useState(false)
   const itemsPerPage = 15
 
-  const categories = [...new Set(products.map((p) => p.category))]
+  const categories = [...new Set(products.map((p) => p.category).filter(Boolean))]
 
   const filteredProducts = products
     .filter((product) => {
       const matchesSearch =
-        product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        product.sku.toLowerCase().includes(searchTerm.toLowerCase())
+        (product.title || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (product.brand || "").toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (product.sku || "").toLowerCase().includes(searchTerm.toLowerCase())
       
       const matchesCategory = categoryFilter === "all" || product.category === categoryFilter
 
@@ -109,11 +109,11 @@ export function ProductsTable({ products, onRefresh }: ProductsTableProps) {
         case "discount":
           return b.discountPercentage - a.discountPercentage
         case "newest":
-          return new Date(b.meta.createdAt).getTime() - new Date(a.meta.createdAt).getTime()
+          return new Date(b.meta?.createdAt || 0).getTime() - new Date(a.meta?.createdAt || 0).getTime()
         case "weight":
           return b.weight - a.weight
         default:
-          return a.title.localeCompare(b.title)
+          return (a.title || "").localeCompare(b.title || "")
       }
     })
 
@@ -294,21 +294,21 @@ export function ProductsTable({ products, onRefresh }: ProductsTableProps) {
                           <div className="relative h-12 w-12 rounded-md overflow-hidden flex-shrink-0">
                             <Image
                               src={product.thumbnail || "/placeholder.svg"}
-                              alt={product.title}
+                              alt={product.title || "Product"}
                               fill
                               className="object-cover"
                             />
                           </div>
                           <div className="min-w-0 flex-1">
-                            <div className="font-medium truncate">{product.title}</div>
-                            <div className="text-sm text-gray-500 truncate">{product.brand}</div>
-                            <div className="text-xs text-gray-400">{product.sku}</div>
+                            <div className="font-medium truncate">{product.title || "No Title"}</div>
+                            <div className="text-sm text-gray-500 truncate">{product.brand || "No Brand"}</div>
+                            <div className="text-xs text-gray-400">{product.sku || "No SKU"}</div>
                           </div>
                         </div>
                       </TableCell>
                       <TableCell className="w-[120px]">
                         <Badge variant="outline" className="truncate">
-                          {product.category.charAt(0).toUpperCase() + product.category.slice(1)}
+                          {(product.category || "").charAt(0).toUpperCase() + (product.category || "").slice(1)}
                         </Badge>
                       </TableCell>
                       <TableCell className="w-[120px]">
